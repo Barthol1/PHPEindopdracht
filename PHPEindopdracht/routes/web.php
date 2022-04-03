@@ -25,4 +25,20 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+Route::group(['middleware' => ['role:superadmin']], function() {
+
+});
+Route::group(['middleware' => ['role:administratief medewerker']], function() {
+
+});
+Route::group(['middleware' => ['role:pakket inpakker']], function() {
+
+});
+Route::group(['middleware' => ['role_or_permission:superadmin|schrijven']], function() {
+
+});
+Route::group(['middleware' => ['role_or_permission:superadmin|lezen']], function() {
+
+});
+
 require __DIR__.'/auth.php';
