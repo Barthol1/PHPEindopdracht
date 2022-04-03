@@ -53,9 +53,9 @@ class RolesAndPermissionsSeeder extends Seeder
         $user->assignRole($admin);
 
         $user = User::factory()->create([
-            'name' => 'package packer',
-            'email' => 'packagepacker@gmail.com',
-            'password' => bcrypt('packagepacker'),
+            'name' => 'pakket inpakker',
+            'email' => 'pakketinpakker@gmail.com',
+            'password' => bcrypt('pakketinpakker'),
             'adres' => str::random(10),
             'plaats'=> str::random(10),
             'postcode' => str::random(4)
