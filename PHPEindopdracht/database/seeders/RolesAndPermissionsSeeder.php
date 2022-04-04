@@ -36,9 +36,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'name' => 'superadmin',
             'email' => 'superadmin@gmail.com',
             'password' => bcrypt('superadmin'),
-            'adres' => str::random(10),
-            'plaats'=> str::random(10),
-            'postcode' => str::random(4)
         ]);
         $user->assignRole($superadmin);
 
@@ -46,9 +43,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('admin'),
-            'adres' => str::random(10),
-            'plaats'=> str::random(10),
-            'postcode' => str::random(4)
         ]);
         $user->assignRole($admin);
 
@@ -56,9 +50,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'name' => 'pakket inpakker',
             'email' => 'pakketinpakker@gmail.com',
             'password' => bcrypt('pakketinpakker'),
-            'adres' => str::random(10),
-            'plaats'=> str::random(10),
-            'postcode' => str::random(4)
         ]);
         $user->assignRole($packagePacker);
     }
