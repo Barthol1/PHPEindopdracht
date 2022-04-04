@@ -19,27 +19,6 @@
                 <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
             </div>
 
-            <!-- Adres -->
-            <div>
-                <x-label for="adres" :value="__('Adres')" />
-
-                <x-input id="adres" class="block mt-1 w-full" type="text" name="adres" :value="old('adres')" required autofocus />
-            </div>
-
-            <!-- Plaats -->
-            <div>
-                <x-label for="plaats" :value="__('Plaats')" />
-
-                <x-input id="plaats" class="block mt-1 w-full" type="text" name="plaats" :value="old('plaats')" required autofocus />
-            </div>
-
-            <!-- Postcode -->
-            <div>
-                <x-label for="postcode" :value="__('Postcode')" />
-
-                <x-input id="postcode" class="block mt-1 w-full" type="text" name="postcode" :value="old('postcode')" required autofocus />
-            </div>
-
             <!-- Email Address -->
             <div class="mt-4">
                 <x-label for="email" :value="__('Email')" />
