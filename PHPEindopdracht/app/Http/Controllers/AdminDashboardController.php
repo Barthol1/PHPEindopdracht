@@ -6,7 +6,6 @@ use App\Models\Package;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
-use DB;
 use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
