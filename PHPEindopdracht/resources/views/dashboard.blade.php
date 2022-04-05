@@ -20,6 +20,7 @@
                             <p class="card-text">zendadres: {{$a->sender_adres}}</p>
                         </div>
                     </div>
+                    @endforeach
                 </div>
             </div>
         </div>
