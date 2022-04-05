@@ -3,7 +3,7 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
         </h2>
-        
+
     </x-slot>
 
     <div class="py-12">
@@ -16,12 +16,10 @@
                             {{$a->status}}
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">{{$a->name}}</h5>
-                            <p class="card-text">{{$a->sender_adres}}</p>
+                            <h5 class="card-title">naam: {{$a->name}}</h5>
+                            <p class="card-text">zendadres: {{$a->sender_adres}}</p>
                         </div>
                     </div>
-                    @endforeach
-                    {{ $allpackages->links() }}
                 </div>
             </div>
         </div>
