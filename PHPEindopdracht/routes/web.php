@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('/', DashboardController::class)->middleware(['auth'])->name('index', 'dashboard');
+Route::resource('admindashboard', AdminDashboardController::class)->middleware(['auth']);
 
 Route::group(['middleware' => ['role:superadmin']], function() {
 
