@@ -20,10 +20,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('/package', PackageSignUpController::class);
+Route::apiResource('admindashboard/package', PackageSignUpController::class);
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::delete('/package/{id}', [ProductController::class, 'update']);
-    Route::put('/package/{id}', [ProductController::class, 'destroy']);
+    Route::delete('admindashboard/package/{id}', [ProductController::class, 'update']);
+    Route::put('admindashboard/package/{id}', [ProductController::class, 'destroy']);
 });
 // Route::apiResource('package', PackageSignUpController::class)->middleware('auth:api');
 // Route::delete('package/{id}', [PackageSignUpController::class, 'destroy']);

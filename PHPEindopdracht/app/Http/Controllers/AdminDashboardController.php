@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\Auth;
 
-class DashboardController extends Controller
+class AdminDashboardController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,20 +18,19 @@ class DashboardController extends Controller
      */
     public function index()
     {
-
-        if(Auth::user()->id == Role::find(1)->id || Auth::user()->id == Role::find(2)->id) {
+        if(Auth::user()->id == Role::find(1)->id || Auth::user()->id == Role::find(2)->id || Auth::user()->id == Role::find(3)->id) {
             $allpackages = Package::paginate(8);
-            return view('dashboard', compact('allpackages'));
+            return view('admindashboard.index', compact('allpackages'));
         }
 
         $allpackages = Package::where(Auth::user()->webshops_id, '!=', null);
 
         if($allpackages != null) {
             $allpackages->paginate(8);
-            return view('dashboard', compact('allpackages'));
+            return view('admindashboard.index', compact('allpackages'));
         }
 
-        return view('dashboard');
+        return view('admindashboard.index');
     }
 
     // public function webshopstore(Request $request)
@@ -68,7 +67,7 @@ class DashboardController extends Controller
         $request['webshops_id'] = 1;
 
         User::create($request->all());
-        return redirect('/');
+        return redirect('/admindashboard');
     }
 
     /**

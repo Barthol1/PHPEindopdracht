@@ -39,19 +39,19 @@ class PackageSignUpController extends Controller
         $request['status'] = "Aangemeld";
 
         Package::create($request->all());
-        return redirect('/');
+        return redirect('/admindashboard');
     }
 
     public function update(Request $request, $id)
     {
         $package = Package::find($id);
         $package->update($request->all());
-        return redirect('/');
+        return redirect('/admindashboard');
     }
 
     public function destroy($id)
     {
         Package::destroy($id);
-        return redirect('/');
+        return redirect('/admindashboard');
     }
 }
