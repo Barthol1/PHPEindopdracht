@@ -16,7 +16,7 @@ class PackageSeeder extends Seeder
     public function run()
     {
         $sampledata = [
-            'name' => str::random(10),
+            'name' => rand(10000000, 999999999),
             'status' => 'Aangemeld',
             'sender_adres' => str::random(10),
             'sender_city' => str::random(10),
@@ -24,10 +24,11 @@ class PackageSeeder extends Seeder
             'receiver_adres' => str::random(10),
             'receiver_city' => str::random(10),
             'receiver_postalcode' => str::random(10),
+            'users_id' => 1
         ];
         Package::create($sampledata);
         $sampledata = [
-            'name' => str::random(10),
+            'name' => rand(10000000, 999999999),
             'status' => 'Afgeleverd',
             'sender_adres' => str::random(10),
             'sender_city' => str::random(10),
@@ -35,10 +36,11 @@ class PackageSeeder extends Seeder
             'receiver_adres' => str::random(10),
             'receiver_city' => str::random(10),
             'receiver_postalcode' => str::random(10),
+            'users_id' => 1
         ];
         Package::create($sampledata);
         $sampledata = [
-            'name' => str::random(10),
+            'name' => rand(10000000, 999999999),
             'status' => 'Onderweg',
             'sender_adres' => str::random(10),
             'sender_city' => str::random(10),
@@ -46,6 +48,7 @@ class PackageSeeder extends Seeder
             'receiver_adres' => str::random(10),
             'receiver_city' => str::random(10),
             'receiver_postalcode' => str::random(10),
+            'users_id' => 1
         ];
         Package::create($sampledata);
     }
