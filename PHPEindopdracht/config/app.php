@@ -163,6 +163,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
+        Milon\Barcode\BarcodeServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -176,6 +178,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Milon\Barcode\BarcodeServiceProvider::class,
 
     ],
 
@@ -192,6 +195,9 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // ...
+        'PDF' => Barryvdh\DomPDF\Facade\Pdf::class,
+        'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,
+        'DNS2D' => Milon\Barcode\Facades\DNS2DFacade::class,
     ])->toArray(),
 
 ];

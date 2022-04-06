@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\package;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use function PHPUnit\Framework\isNull;
 
@@ -33,11 +34,23 @@ class DashboardController extends Controller
         return view('dashboard', compact('allpackages'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function getPDF($id) {
+        $package = package::all()->where('id', '=', $id)->first();
+        $data = [
+            'id' => $package->id,
+            'name' => $package->name,
+            'sender_adres' => $package->sender_adres,
+            'sender_city' => $package->sender_city,
+            'sender_postalcode' => $package->sender_postalcode,
+            'receiver_adres' => $package->receiver_adres,
+            'receiver_city' => $package->receiver_city,
+            'receiver_postalcode' => $package->receiver_postalcode
+        ];
+        view()->share('package', $data);
+        $pdf = PDF::loadView('pdfs.Label', $data);
+        return $pdf->download($package->name.'.pdf');
+    }
+
     public function create()
     {
         //
