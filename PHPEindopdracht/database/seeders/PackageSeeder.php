@@ -3,9 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\package;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PackageSeeder extends Seeder
@@ -27,7 +25,7 @@ class PackageSeeder extends Seeder
             'receiver_city' => str::random(10),
             'receiver_postalcode' => str::random(10),
         ];
-        package::create($sampledata);
+        Package::create($sampledata);
         $sampledata = [
             'name' => str::random(10),
             'status' => 'Afgeleverd',
@@ -38,7 +36,7 @@ class PackageSeeder extends Seeder
             'receiver_city' => str::random(10),
             'receiver_postalcode' => str::random(10),
         ];
-        package::create($sampledata);
+        Package::create($sampledata);
         $sampledata = [
             'name' => str::random(10),
             'status' => 'Onderweg',
@@ -49,6 +47,6 @@ class PackageSeeder extends Seeder
             'receiver_city' => str::random(10),
             'receiver_postalcode' => str::random(10),
         ];
-        package::create($sampledata);
+        Package::create($sampledata);
     }
 }

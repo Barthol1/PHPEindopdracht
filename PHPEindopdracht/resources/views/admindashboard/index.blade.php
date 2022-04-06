@@ -28,9 +28,11 @@
                         </div>
                     </div>
                     @endforeach
+                    @foreach($allpackages as $a)
                     @if($allpackages != null)
                     {{ $allpackages->links() }}
                     @endif
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -81,13 +83,29 @@
             </form>
         </div>
         <div>
-        <form action="{{ route('store') }}" method="post">
+        <form action="{{ route('admindashboard.store') }}" method="post">
         @csrf
             <div class="flex flex-wrap -mx-3 mb-6">
                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                    <h2>webshop account:</h2>
-                    <label for="name" class="block uppercase">naam</label>
-                    <input type="text" name="name"/>
+                    <h2>Toevoegen klant aan webshop:</h2>
+                    <label for="name" class="block uppercase">Klantnaam</label>
+                    @if($webshops != null)
+                    <select>
+                        @foreach($webshops as $w)
+                        <option value="{{$w->id}}">{{$w->name}}</option>
+                        @endforeach
+                    </select>
+                    @endif
+
+                    <label for="name" class="block uppercase">Webshopnaam</label>
+                    @if($webshops != null)
+                    <select>
+                        @foreach($webshops as $w)
+                        <option value="{{$w->id}}">{{$w->name}}</option>
+                        @endforeach
+                    </select>
+                    @endif
+
 
                     <label for="email" class="block uppercase">email</label>
                     <input type="text" name="email"/>

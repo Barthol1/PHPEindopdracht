@@ -18,4 +18,8 @@ class Webshop extends Model
         'place',
         'postalcode'
     ];
+
+    public function User(){
+        return $this->hasMany(User::class);
+    }
 }
