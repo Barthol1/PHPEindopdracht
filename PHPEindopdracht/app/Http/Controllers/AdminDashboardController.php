@@ -6,7 +6,6 @@ use App\Models\Package;
 use App\Models\User;
 use App\Models\Webshop;
 use Illuminate\Http\Request;
-use DB;
 use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
@@ -21,13 +20,13 @@ class AdminDashboardController extends Controller
         $user = Auth::user();
         $allpackages = Package::paginate(8);
 
-        if($user->getRoleNames() != null && $user->hasPermissionTo("schrijven")) {
+        if($user->getRoleNames() != null && $user->can("schrijven")) {
             $webshops = Webshop::all();
-            return view('admindashboard.index', compact(['allpackages', 'webshops']));
+            $clients = User::leftJoin('model_has_roles as m', 'm.model_id', '=', 'users.id')->whereNull('m.role_id')->get();
+            return view('admindashboard.index', compact(['clients', 'allpackages', 'webshops']));
         }
-        if($user->getRoleNames() != null && $user->hasPermissionTo("lezen")) {
-            return view('admindashboard.index', compact('allpackages'));
-        }
+
+        return view('admindashboard.index', compact('allpackages'));
     }
 
     /**
@@ -48,8 +47,8 @@ class AdminDashboardController extends Controller
      */
     public function store(Request $request)
     {
-        User::create($request->all());
-        return redirect('/admindashboard');
+        // User::create($request->all());
+        // return redirect('/admindashboard');
     }
 
     /**
@@ -81,9 +80,13 @@ class AdminDashboardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $user = User::find($request->client);
+        $user->webshops_id = $request->webshop;
+        $user->save();
+
+        return redirect('/admindashboard');
     }
 
     /**

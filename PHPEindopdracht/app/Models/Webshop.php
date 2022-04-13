@@ -19,7 +19,7 @@ class Webshop extends Model
         'postalcode'
     ];
 
-    public function User(){
+    public function user(){
         return $this->hasMany(User::class);
     }
 }

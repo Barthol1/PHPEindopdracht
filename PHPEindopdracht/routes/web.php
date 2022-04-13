@@ -19,6 +19,7 @@ Route::resource('/', DashboardController::class)->middleware(['auth'])->name('in
 Route::get('/getpdf/{var1}', [DashboardController::class, 'getPDF'])->name('getpdf');
 
 Route::resource('admindashboard', AdminDashboardController::class)->middleware(['auth']);
+Route::put('admindashboard', [AdminDashboardController::class, 'update'])->name('update');
 
 Route::group(['middleware' => ['role:superadmin']], function() {
 

@@ -83,35 +83,30 @@
             </form>
         </div>
         <div>
-        <form action="{{ route('admindashboard.store') }}" method="post">
+        <form action="{{ route('admindashboard.update', '$clients->id') }}" method="post">
         @csrf
+        @method('PUT')
             <div class="flex flex-wrap -mx-3 mb-6">
                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                     <h2>Toevoegen klant aan webshop:</h2>
+
                     <label for="name" class="block uppercase">Klantnaam</label>
-                    @if($webshops != null)
-                    <select>
-                        @foreach($webshops as $w)
-                        <option value="{{$w->id}}">{{$w->name}}</option>
+                    @if(!empty($clients))
+                    <select name="client" aria-label="client" class="form-control">
+                        @foreach($clients as $c)
+                            <option value="{{$c->id}}">{{$c->name}} / {{$c->email}}</option>
                         @endforeach
                     </select>
                     @endif
 
                     <label for="name" class="block uppercase">Webshopnaam</label>
                     @if($webshops != null)
-                    <select>
+                    <select name="webshop" aria-label="webshop" class="form-control">
                         @foreach($webshops as $w)
-                        <option value="{{$w->id}}">{{$w->name}}</option>
+                            <option value="{{$w->id}}">{{$w->name}} / {{$c->email}}</option>
                         @endforeach
                     </select>
                     @endif
-
-
-                    <label for="email" class="block uppercase">email</label>
-                    <input type="text" name="email"/>
-
-                    <label for="password" class="block uppercase">wachtwoord</label>
-                    <input type="text" name="password"/>
                 </div>
             </div>
             <div class="flex justify-center">
