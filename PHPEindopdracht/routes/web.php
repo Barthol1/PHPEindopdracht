@@ -16,7 +16,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('/', DashboardController::class)->middleware(['auth'])->name('index', 'dashboard');
-Route::get('/getpdf/{var1}', [DashboardController::class, 'getPDF'])->name('getpdf');
+
+Route::controller(AdminDashboardController::class)->group(function() {
+    Route::get('/getpdf/{var1}', 'getPDF')->name('getpdf');
+    Route::get('/allpdf', 'getAllPDF')->name('getallpdf');
+});
 
 Route::resource('admindashboard', AdminDashboardController::class)->middleware(['auth']);
 
