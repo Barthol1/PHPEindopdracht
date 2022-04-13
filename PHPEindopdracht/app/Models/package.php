@@ -4,13 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Digikraaft\ReviewRating\Traits\HasReviewRating;
-
+use DGvai\Review\Reviewable;
 
 class package extends Model
 {
     use HasFactory;
-    use HasReviewRating;
+    use Reviewable;
 
     protected $table = 'packages';
     protected $id = 'Id';
