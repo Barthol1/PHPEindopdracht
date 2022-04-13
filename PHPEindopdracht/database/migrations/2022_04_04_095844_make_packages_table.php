@@ -20,10 +20,11 @@ return new class extends Migration
             $table->string('sender_adres');
             $table->string('sender_city');
             $table->string('sender_postalcode');
+            $table->string('receiver_name');
             $table->string('receiver_adres');
             $table->string('receiver_city');
             $table->string('receiver_postalcode');
-            $table->foreignId('users_id')->nullable()->constrained();
+            $table->foreignId('users_id')->constrained();
             $table->timestamps();
         });
     }

@@ -52,5 +52,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'password' => bcrypt('pakketinpakker'),
         ]);
         $user->assignRole($packagePacker);
+
+        $user = User::factory()->create([
+            'name' => 'Pieter Koekenbakker',
+            'email' => 'pieter@koek.com',
+            'password' => bcrypt('pieter'),
+            'webshops_id' => 1
+        ]);
     }
 }
