@@ -17,13 +17,6 @@
                         <div class="card-body">
                             <div class="row">
                                 <h5 class="card-title col-md-2">naam: {{$a->name}}</h5>
-                                @if($a->status != 'Aangemeld' && $a->status != 'Afgewezen')
-                                <a class="btn btn-primary offset-md-8 col-md-2" href="{{ route('getpdf', $a->id) }}">Download Label</a>
-                                @elseif($a->status == 'Afgewezen')
-                                <p class="offset-md-8 col-md-2">Het pakket is afgewezen.</p>
-                                @else
-                                <p class="offset-md-8 col-md-2">Label word zo spoedig mogelijk gemaakt.</p>
-                                @endif
                             </div>
                             <p class="card-text">zendadres: {{$a->sender_adres}}</p>
                         </div>

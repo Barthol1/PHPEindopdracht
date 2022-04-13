@@ -15,7 +15,12 @@
                             {{$a->status}}
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">naam: {{$a->name}}</h5>
+                            <div class="row">
+                                <h5 class="card-title col-md-2">naam: {{$a->name}}</h5>
+                                @can('schrijven')
+                                <a class="btn btn-primary offset-md-8 col-md-2" href="{{ route('getpdf', $a->id) }}">Download Label</a>
+                                @endcan
+                            </div>
                             <p class="card-text">zendadres: {{$a->sender_adres}}</p>
                             @can('schrijven')
                             <form action="{{ route('package.destroy', $a->id) }}" method="post" class="flex justify-center">

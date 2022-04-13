@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('/', DashboardController::class)->middleware(['auth'])->name('index', 'dashboard');
-Route::get('/getpdf/{var1}', [DashboardController::class, 'getPDF'])->name('getpdf');
+Route::get('/getpdf/{var1}', [AdminDashboardController::class, 'getPDF'])->name('getpdf');
 
 Route::resource('admindashboard', AdminDashboardController::class)->middleware(['auth']);
 
