@@ -34,6 +34,11 @@ class DashboardController extends Controller
         return view('dashboard', compact('allpackages'));
     }
 
+    public function addReview(Request $request,$id) {
+        $user = auth()->user()->id;
+
+    }
+
     public function create()
     {
         //
