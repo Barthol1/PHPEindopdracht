@@ -6,6 +6,7 @@ use App\Models\package;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Digikraaft\ReviewRating\Models\Review;
 
 use function PHPUnit\Framework\isNull;
 
@@ -35,8 +36,13 @@ class DashboardController extends Controller
     }
 
     public function addReview(Request $request,$id) {
-        $user = auth()->user()->id;
-
+        $request->validate([
+            'review' => 'required'
+        ]);
+        $user = auth()->user();
+        $package = package::find($id);
+        $package->makeReview($user,$request->review, "Review");
+        return redirect('/');
     }
 
     public function create()

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "164252add8f0fb42e142f66e3d14c496",
+    "content-hash": "d3cb47252e3687afcf3fdb1d3460082e",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -216,6 +216,50 @@
                 "source": "https://github.com/dflydev/dflydev-dot-access-data/tree/v3.0.1"
             },
             "time": "2021-08-13T13:06:58+00:00"
+        },
+        {
+            "name": "dgvai/laravel-user-review",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dgvai/laravel-user-review.git",
+                "reference": "5795e56cd6085c1c0a480846cf17f174d2fd8e78"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dgvai/laravel-user-review/zipball/5795e56cd6085c1c0a480846cf17f174d2fd8e78",
+                "reference": "5795e56cd6085c1c0a480846cf17f174d2fd8e78",
+                "shasum": ""
+            },
+            "type": "laravel-package",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "DGvai\\Review\\ReviewerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DGvai\\Review\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jalal Uddin",
+                    "email": "dgvai-git@users.noreply.github.com"
+                }
+            ],
+            "description": "A Laravel Package for User Review on Models, like Product review for ecommerce systems.",
+            "support": {
+                "issues": "https://github.com/dgvai/laravel-user-review/issues",
+                "source": "https://github.com/dgvai/laravel-user-review/tree/v1.0"
+            },
+            "time": "2020-03-25T05:31:54+00:00"
         },
         {
             "name": "digikraaft/laravel-review-rating",
