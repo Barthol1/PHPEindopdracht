@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Webshop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminDashboardController extends Controller
 {
@@ -28,6 +29,35 @@ class AdminDashboardController extends Controller
 
         return view('admindashboard.index', compact('allpackages'));
     }
+
+    public function getPDF($id) {
+        $package = package::all()->where('id', '=', $id);
+        foreach($package as $p) {
+            $p->status = "Uitgeprint";
+            $p->save();
+        }
+        $data = compact('package');
+        view()->share('package', $data);
+        $pdf = PDF::loadView('pdfs.Label', $data);
+        return $pdf->download($package->first()->name.'.pdf');
+    }
+
+    public function getAllPDF() {
+        $package = package::all();
+        foreach($package as $p) {
+            $p->status = "Uitgeprint";
+            $p->save();
+        }
+        $data = compact('package');
+        view()->share('package', $data);
+        $pdf = PDF::loadView('pdfs.Label', $data);
+        return $pdf->download($package->first()->name.'.pdf');
+    }
+
+    // public function webshopstore(Request $request)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for creating a new resource.

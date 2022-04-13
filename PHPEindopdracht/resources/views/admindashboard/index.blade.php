@@ -9,13 +9,23 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
+                    <div class="row mb-4">
+                        <div class="col-md-2 offset-md-10">
+                            <a class="btn btn-primary" href="{{ route('getallpdf')}}">Maak Alle Labels</a>
+                        </div>
+                    </div>
                     @foreach($allpackages as $a)
                     <div class="card mb-2">
                         <div class="card-header">
                             {{$a->status}}
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">naam: {{$a->name}}</h5>
+                            <div class="row">
+                                <h5 class="card-title col-md-2">naam: {{$a->name}}</h5>
+                                @can('schrijven')
+                                <a class="btn btn-primary offset-md-8 col-md-2" href="{{ route('getpdf', $a->id) }}">Download Label</a>
+                                @endcan
+                            </div>
                             <p class="card-text">zendadres: {{$a->sender_adres}}</p>
                             @can('schrijven')
                             <form action="{{ route('package.destroy', $a->id) }}" method="post" class="flex justify-center">
