@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\package;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Digikraaft\ReviewRating\Models\Review;
 
 use function PHPUnit\Framework\isNull;
 
-class DashboardController extends Controller
+class TracingController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,32 +16,14 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $webshopid = auth()->user()->webshops_id;
-        $userid = auth()->user()->id;
-        if(!isNull($webshopid)) {
-            $allpackages = DB::table('packages')
-                ->join('users', 'packages.users_id', '=', 'users.id')
-                ->where('users.webshopid', '=', $webshopid)
-                ->paginate(8);
-        }
-        else {
-            $allpackages = DB::table('packages')
-                ->where('packages.users_id', '=', $userid)
-                ->paginate(8);
-        }
-        return view('dashboard', compact('allpackages'));
+        return view('tracing.index');
     }
 
-    public function addReview(Request $request,$id) {
-        $request->validate([
-            'review' => 'required'
-        ]);
-        $user = auth()->user();
-        $package = package::find($id);
-        $package->makeReview($user,$request->review, "Review");
-        return redirect('/dashboard');
-    }
-
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
         //
@@ -69,7 +48,12 @@ class DashboardController extends Controller
      */
     public function show($id)
     {
-        //
+    }
+
+    public function getPackage(Request $request) {
+        $package = package::all()->where('name', $request->code)->first();
+        //dd($package);
+        return view('tracing.show', compact('package'));
     }
 
     /**
