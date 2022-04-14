@@ -21,8 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('admindashboard/package', PackageSignUpController::class);
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::delete('admindashboard/package/{id}', [ProductController::class, 'update']);
-    Route::put('admindashboard/package/{id}', [ProductController::class, 'destroy']);
+    Route::delete('admindashboard/package/{id}', [PackageSignUpController::class, 'update']);
+    Route::put('admindashboard/package/{id}', [PackageSignUpController::class, 'destroy']);
 });
 // Route::apiResource('package', PackageSignUpController::class)->middleware('auth:api');
 // Route::delete('package/{id}', [PackageSignUpController::class, 'destroy']);
