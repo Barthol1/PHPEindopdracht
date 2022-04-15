@@ -23,5 +23,7 @@ class package extends Model
         'receiver_adres',
         'receiver_city',
         'receiver_postalcode',
+        'receiver_name',
+        'users_id'
     ];
 }
