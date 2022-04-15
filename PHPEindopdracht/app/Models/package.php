@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Digikraaft\ReviewRating\Traits\HasReviewRating;
 
-
-class package extends Model
+class Package extends Model
 {
     use HasFactory;
     use HasReviewRating;
@@ -21,8 +20,14 @@ class package extends Model
         'sender_adres',
         'sender_city',
         'sender_postalcode',
+        'receiver_name',
         'receiver_adres',
         'receiver_city',
         'receiver_postalcode',
+        'users_id',
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }

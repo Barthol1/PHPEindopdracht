@@ -54,10 +54,10 @@ class AdminDashboardController extends Controller
         return $pdf->download($package->first()->name.'.pdf');
     }
 
-    // public function webshopstore(Request $request)
-    // {
-    //     //
-    // }
+    public function webshopstore(Request $request)
+    {
+        //
+    }
 
     /**
      * Show the form for creating a new resource.

@@ -53,46 +53,6 @@
     @endrole -->
     @can('schrijven')
     <div class="flex justify-center">
-        <div>
-            <form action="{{ route('package.store') }}" method="post">
-            @csrf
-                <div class="flex flex-row">
-                    <div class="flex flex-wrap -mx-3 mb-6">
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <h2>Verzender:</h2>
-                            <label for="name" class="block uppercase">naam</label>
-                            <input type="text" name="name"/>
-
-                            <label for="sender_adres" class="block uppercase">adres</label>
-                            <input type="text" name="sender_adres"/>
-
-                            <label for="sender_city" class="block uppercase">stad</label>
-                            <input type="text" name="sender_city"/>
-
-                            <label for="sender_postalcode" class="block uppercase">postcode</label>
-                            <input type="text" name="sender_postalcode"/>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap -mx-3 mb-6">
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                        <h2>Ontvanger:</h2>
-                            <label for="receiver_adres" class="block uppercase">adres</label>
-                            <input type="text" name="receiver_adres"/>
-
-                            <label for="receiver_postalcode" class="block uppercase">postcode</label>
-                            <input type="text" name="receiver_postalcode"/>
-
-                            <label for="receiver_city" class="block uppercase">stad</label>
-                            <input type="text" name="receiver_city"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex justify-center">
-                    <button type="submit" value="pakket aanmelden" class="btn btn-dark bg-dark mt-2">Pakket aanmelden</button>
-                </div>
-            </form>
-        </div>
-        <div>
         <form action="{{ route('admindashboard.update', '$clients->id') }}" method="post">
         @csrf
         @method('PUT')
@@ -110,10 +70,10 @@
                     @endif
 
                     <label for="name" class="block uppercase">Webshopnaam</label>
-                    @if($webshops != null)
+                    @if(!empty($webshops))
                     <select name="webshop" aria-label="webshop" class="form-control">
                         @foreach($webshops as $w)
-                            <option value="{{$w->id}}">{{$w->name}} / {{$c->email}}</option>
+                            <option value="{{$w->id}}">{{$w->name}}</option>
                         @endforeach
                     </select>
                     @endif
@@ -123,7 +83,6 @@
                 <button type="submit" value="webshop account" class="btn btn-dark bg-dark mt-2">webshop account aanmaken</button>
             </div>
         </form>
-        </div>
     </div>
     @endcan
     @endhasanyrole

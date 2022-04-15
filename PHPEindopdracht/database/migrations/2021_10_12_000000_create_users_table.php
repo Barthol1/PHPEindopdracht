@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('webshops_id')->nullable()->constrained();
             $table->rememberToken();
             $table->timestamps();
+            $table->string('api_token', 80)->unique()->nullable()->default(null);
         });
     }
 

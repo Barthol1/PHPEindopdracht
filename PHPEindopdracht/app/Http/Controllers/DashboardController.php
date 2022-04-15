@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\package;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 use function PHPUnit\Framework\isNull;
 
@@ -18,20 +20,11 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $webshopid = auth()->user()->webshops_id;
-        $userid = auth()->user()->id;
-        if(!isNull($webshopid)) {
-            $allpackages = DB::table('packages')
-                ->join('users', 'packages.users_id', '=', 'users.id')
-                ->where('users.webshopid', '=', $webshopid)
-                ->paginate(8);
-        }
-        else {
-            $allpackages = DB::table('packages')
-                ->where('packages.users_id', '=', $userid)
-                ->paginate(8);
-        }
-        return view('dashboard', compact('allpackages'));
+        $userid = Auth::user()->id;
+        $webshopid = Auth::user()->webshops_id;
+        $packages = Package::with('User')->where('users_id', '=', $userid)->paginate(8);
+
+        return view('dashboard', compact('userid', 'webshopid', 'packages'));
     }
 
     public function addReview(Request $request,$id) {
