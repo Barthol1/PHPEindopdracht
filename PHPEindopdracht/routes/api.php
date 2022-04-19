@@ -19,12 +19,37 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 // Route::post('/auth/login', [AuthenticatedSessionController::class, 'login']);
 
+// Route::post('/tokens/create', function (Request $request) {
+//     $token = $request->user()->createToken($request->token_name);
 
-Route::apiResource('/package', PackageSignUpController::class);
+//     return ['token' => $token->plainTextToken];
+// });
 
-Route::middleware('auth:api')->get('/user', function(Request $request) {
-    return app()->request()->user();
+// Route::group(['middleware' => ['auth:sanctum']], function() {
+//     Route::apiResource('/packages', PackageSignUpController::class);
+//     Route::get('/packages/get/{id}', [PackageSignUpController::class, 'get']);
+//     Route::post('/packages/store', [PackageSignUpController::class, 'store']);
+//     Route::put('/packages/{id}', [PackageSignUpController::class, 'update']);
+//     Route::delete('/packages/{id}', [PackageSignUpController::class, 'destroy']);
+//     // return $request->user();
+// });
+
+
+Route::group(['middleware' => ['auth:sanctum']], function() {
+    Route::controller(PackageSignUpController::class)->prefix('packages')->group(function() {
+        Route::apiResource('/', PackageSignUpController::class)->only('index');
+        Route::get('/get/{id}', 'get')->name('packages.get');
+        Route::post('/store', 'store')->name('packages.store');
+        Route::put('/{id}', 'update')->name('packages.update');
+        Route::delete('/{id}', 'destroy')->name('packages.destroy');
+    });
 });
+
+// Route::apiResource('package', PackageSignUpController::class)->middleware('auth:sanctum');
+
+// Route::middleware('auth:api')->get('/user', function(Request $request) {
+//     return app()->request()->user();
+// });
 
 // Route::middleware('auth:sanctum')->get('/user', function () {
 //     Route::get('/package/get/{id}', [PackageSignUpController::class, 'get']);

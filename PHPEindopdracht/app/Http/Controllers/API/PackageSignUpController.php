@@ -22,12 +22,12 @@ class PackageSignUpController extends Controller
 
     public function index()
     {
-        return Package::all();
+        return Package::where('users_id', request()->user()->id)->get();
     }
 
-    public function get($user)
+    public function get($productnr)
     {
-        return Package::where('users_id', $user)->get();
+        return Package::where('name', 'like', '%' . $productnr . '%')->where('users_id', request()->user()->id)->get();
     }
 
     public function store(Request $request)
@@ -44,8 +44,7 @@ class PackageSignUpController extends Controller
         ]);
 
         $request['status'] = "Aangemeld";
-        $request['users_id'] = 11;
-        $request['api_token'] = auth()->guard('api')->user();
+        $request['users_id'] = request()->user()->id;
 
         Package::create($request->all());
         return redirect('/admindashboard');

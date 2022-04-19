@@ -12,7 +12,7 @@ class Package extends Model
     use HasReviewRating;
 
     protected $table = 'packages';
-    protected $id = 'Id';
+    protected $id = 'id';
 
     protected $fillable = [
         'name',

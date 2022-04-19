@@ -37,21 +37,27 @@ class RolesAndPermissionsSeeder extends Seeder
             'email' => 'superadmin@gmail.com',
             'password' => bcrypt('superadmin'),
         ]);
+        $user['api_token'] = $user->createToken('api_token')->plainTextToken;
         $user->assignRole($superadmin);
+        $user->save();
 
         $user = User::factory()->create([
             'name' => 'admin',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('admin'),
         ]);
+        $user['api_token'] = $user->createToken('api_token')->plainTextToken;
         $user->assignRole($admin);
+        $user->save();
 
         $user = User::factory()->create([
             'name' => 'pakket inpakker',
             'email' => 'pakketinpakker@gmail.com',
             'password' => bcrypt('pakketinpakker'),
         ]);
+        $user['api_token'] = $user->createToken('api_token')->plainTextToken;
         $user->assignRole($packagePacker);
+        $user->save();
 
         $user = User::factory()->create([
             'name' => 'Pieter Koekenbakker',
@@ -59,5 +65,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'password' => bcrypt('pieter'),
             'webshops_id' => 1
         ]);
+        $user['api_token'] = $user->createToken('api_token')->plainTextToken;
+        $user->save();
     }
 }

@@ -28,7 +28,7 @@
     </div>
 
     <div class="flex justify-center">
-            <form action="{{ route('package.store') }}" method="post">
+            <form action="{{ route('packages.store') }}" method="post">
             @csrf
                 <div class="flex flex-row">
                     @if(!empty($webshops_id))

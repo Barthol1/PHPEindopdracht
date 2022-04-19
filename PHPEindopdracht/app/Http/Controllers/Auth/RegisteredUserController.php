@@ -44,12 +44,10 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            // 'api_token' => Str::random(60),
         ]);
 
-        $user->createToken('api_token')->plainTextToken;
-
-        event(new Registered($user));
+        $user['api_token'] = $user->createToken('api_token')->plainTextToken;
+        $user->save();
 
         Auth::login($user);
 

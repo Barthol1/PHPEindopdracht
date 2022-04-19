@@ -9,8 +9,8 @@ class Webshop extends Model
 {
     use HasFactory;
 
-    protected $table = 'Webshops';
-    protected $id = 'Id';
+    protected $table = 'webshops';
+    protected $id = 'id';
 
     protected $fillable = [
         'name',

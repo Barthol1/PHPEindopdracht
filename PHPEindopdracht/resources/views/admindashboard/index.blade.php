@@ -28,7 +28,7 @@
                             </div>
                             <p class="card-text">zendadres: {{$a->sender_adres}}</p>
                             @can('schrijven')
-                            <form action="{{ route('package.destroy', $a->id) }}" method="post" class="flex justify-center">
+                            <form action="{{ route('packages.destroy', $a->id) }}" method="post" class="flex justify-center">
                             @csrf
                             @method('Delete')
                                 <button type="submit" class="block">Verwijderen<button>

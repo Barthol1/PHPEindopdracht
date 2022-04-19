@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('password');
             $table->foreignId('webshops_id')->nullable()->constrained();
             $table->rememberToken();
-            $table->timestamps();
             $table->string('api_token', 80)->unique()->nullable()->default(null);
+            $table->timestamps();
         });
     }
 
