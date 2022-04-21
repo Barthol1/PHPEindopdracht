@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use app\enum\status as EnumStatus;
 use App\Models\package;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Digikraaft\ReviewRating\Models\Review;
+use App\enum;
+use App\enum\Package_Status;
+use App\enum\PackageSorting;
+use App\enum\PackageStatus;
+use Dompdf\FrameDecorator\Table;
+use PHPUnit\Framework\isNull;
 
 use function PHPUnit\Framework\isNull;
 
@@ -17,22 +24,32 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $webshopid = auth()->user()->webshops_id;
         $userid = auth()->user()->id;
+
+        $query = DB::table('packages');
         if(!isNull($webshopid)) {
-            $allpackages = DB::table('packages')
+            $allpackages = $query
                 ->join('users', 'packages.users_id', '=', 'users.id')
-                ->where('users.webshopid', '=', $webshopid)
-                ->paginate(8);
+                ->where('users.webshopid', '=', $webshopid);
         }
         else {
-            $allpackages = DB::table('packages')
-                ->where('packages.users_id', '=', $userid)
-                ->paginate(8);
+            $allpackages = $query
+                ->where('packages.users_id', '=', $userid);
         }
-        return view('dashboard', compact('allpackages'));
+        if($request->Status!="") {
+            $allpackages->where('Status', $request->Status);
+        }
+
+        if($request->Sorting!="") {
+            $allpackages->orderBy('name', 'desc');
+        }
+        $allpackages = $allpackages->paginate(8);
+        $status = PackageStatus::cases();
+        $sorting = PackageSorting::cases();
+        return view('dashboard', compact('allpackages', 'status', 'sorting'));
     }
 
     public function addReview(Request $request,$id) {
