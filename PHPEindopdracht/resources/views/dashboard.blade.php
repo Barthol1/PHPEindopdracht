@@ -30,7 +30,9 @@
                             <div class="col-md-4 offset-md-7">
                                 <input class="form-control" type="file" id="csvfile" name="csvfile" accept=".csv">
                             </div>
-                            <button type="submit" class="btn btn-link col-md-1">Upload</button>
+                            <button type="submit" class="btn btn-link link-dark col-md-1">Upload</button>
+                        </div>
+                    </form>
                     <form action= " {{route('dashboard')}} ">
                         <div class="row mb-2">
                             <div class="col-md-2 offset-md-7">

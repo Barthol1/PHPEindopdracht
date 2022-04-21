@@ -42,15 +42,6 @@ class DashboardController extends Controller
         if(!isNull($webshopid)) {
             $allpackages = $query
                 ->join('users', 'packages.users_id', '=', 'users.id')
-                ->where('users.webshopid', '=', $webshopid)
-                ->orderByDesc('created_at')
-                ->paginate(8);
-        }
-        else {
-            $allpackages = DB::table('packages')
-                ->where('packages.users_id', '=', $userid)
-                ->orderByDesc('created_at')
-                ->paginate(8);
                 ->where('users.webshopid', '=', $webshopid);
         }
         else {
