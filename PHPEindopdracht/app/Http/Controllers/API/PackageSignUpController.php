@@ -5,21 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Package;
 use Illuminate\Http\Request;
-use App\Http\Resources\ProgramResource;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 
 class PackageSignUpController extends Controller
 {
-    // public function index()
-    // {
-    //     $data = Package::latest()->get();
-    //     // return response()->json([ProgramResource::collection($data), 'Programs fetched.']);
-    // }
-    // function __invoke() {
-    //     return 'Testing';
-    // }
-
     public function index()
     {
         return Package::where('users_id', request()->user()->id)->get();
