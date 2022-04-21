@@ -52,7 +52,9 @@ class TracingController extends Controller
 
     public function getPackage(Request $request) {
         $package = package::all()->where('name', $request->code)->first();
-        //dd($package);
+        if(!$package) {
+            return back()->withErrors(['package' => 'Ongeldige pakketcode']);
+        }
         return view('tracing.show', compact('package'));
     }
 

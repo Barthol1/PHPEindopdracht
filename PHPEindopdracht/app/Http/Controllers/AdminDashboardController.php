@@ -8,6 +8,8 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\enum\PackageSorting;
+use App\enum\PackageStatus;
 
 class AdminDashboardController extends Controller
 {
@@ -16,21 +18,30 @@ class AdminDashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if(Auth::user()->id == Role::find(1)->id || Auth::user()->id == Role::find(2)->id || Auth::user()->id == Role::find(3)->id) {
             $allpackages = Package::paginate(8);
-            return view('admindashboard.index', compact('allpackages'));
         }
 
         $allpackages = Package::where(Auth::user()->webshops_id, '!=', null);
 
         if($allpackages != null) {
             $allpackages->paginate(8);
-            return view('admindashboard.index', compact('allpackages'));
         }
 
-        return view('admindashboard.index');
+        if($request->Status!="") {
+            $allpackages->where('Status', $request->Status);
+        }
+
+        if($request->Sorting!="") {
+            $allpackages->orderBy('name', 'desc');
+        }
+        $allpackages = $allpackages->paginate(8);
+        $status = PackageStatus::cases();
+        $sorting = PackageSorting::cases();
+
+        return view('admindashboard.index', compact('allpackages', 'status', 'sorting'));
     }
 
     public function getPDF($id) {

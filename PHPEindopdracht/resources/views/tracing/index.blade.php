@@ -18,6 +18,15 @@
         <div class="card col-md-6">
         <div class="card-body">
             <h5 class="card-title text-center">Voer uw pakketcode in</h5>
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
             <label for="code">Pakketcode</label>
             <input type="text" class="form-control mt-3 mb-3" id="code" name="code">
             <button type="submit" class="btn btn-primary">Zoek</button>
