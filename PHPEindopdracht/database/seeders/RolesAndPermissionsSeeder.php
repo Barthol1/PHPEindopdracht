@@ -59,5 +59,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'password' => bcrypt('pieter'),
             'webshops_id' => 1
         ]);
+        // $user->createToken('api_token')->accessToken;
+        $user->save();
     }
 }
