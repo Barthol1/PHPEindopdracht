@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\TracingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('/', DashboardController::class)->middleware(['auth'])->name('index', 'dashboard');
+Route::resource('/dashboard', DashboardController::class)->middleware(['auth'])->name('index', 'dashboard');
 Route::get('/addreview/{id}', [DashboardController::class, 'addReview'])->middleware(['auth'])->name('addreview');
 Route::post('/import', [DashboardController::class, 'importCSV'])->middleware(['auth'])->name('importcsv');
 
@@ -23,6 +24,9 @@ Route::controller(AdminDashboardController::class)->group(function() {
     Route::get('/getpdf/{var1}', 'getPDF')->name('getpdf');
     Route::get('/allpdf', 'getAllPDF')->name('getallpdf');
 });
+
+Route::resource('/', TracingController::class);
+Route::get('/getpackage', [TracingController::class, 'getPackage'])->name('getpackage');
 
 Route::resource('admindashboard', AdminDashboardController::class)->middleware(['auth']);
 

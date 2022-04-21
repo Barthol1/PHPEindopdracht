@@ -31,6 +31,27 @@
                                 <input class="form-control" type="file" id="csvfile" name="csvfile" accept=".csv">
                             </div>
                             <button type="submit" class="btn btn-link col-md-1">Upload</button>
+                    <form action= " {{route('dashboard')}} ">
+                        <div class="row mb-2">
+                            <div class="col-md-2 offset-md-7">
+                                <select class="form-select" aria-label="Default select example" name="Status">
+                                    <option value="" selected>-- Status --</option>
+                                    @foreach($status as $s)
+                                    <option value="{{$s->value}}">{{$s->value}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select" aria-label="Default select example" name="Sorting">
+                                    <option value="" selected>-- Filter --</option>
+                                    @foreach($sorting as $f)
+                                    <option value="{{$f->value}}">{{strtolower($f->name)}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-link link-dark" type="submit">Sorteren</button>
+                            </div>
                         </div>
                     </form>
                     @foreach($allpackages as $a)

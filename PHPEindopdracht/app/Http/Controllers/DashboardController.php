@@ -2,17 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use app\enum\status as EnumStatus;
 use App\Models\package;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Digikraaft\ReviewRating\Models\Review;
+
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\PackageImport;
 use Error;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Csv as WriterCsv;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+use App\enum;
+use App\enum\Package_Status;
+use App\enum\PackageSorting;
+use App\enum\PackageStatus;
+use Dompdf\FrameDecorator\Table;
+use PHPUnit\Framework\isNull;
+
 
 use function PHPUnit\Framework\isNull;
 
@@ -23,12 +33,14 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $webshopid = auth()->user()->webshops_id;
         $userid = auth()->user()->id;
+
+        $query = DB::table('packages');
         if(!isNull($webshopid)) {
-            $allpackages = DB::table('packages')
+            $allpackages = $query
                 ->join('users', 'packages.users_id', '=', 'users.id')
                 ->where('users.webshopid', '=', $webshopid)
                 ->orderByDesc('created_at')
@@ -39,8 +51,23 @@ class DashboardController extends Controller
                 ->where('packages.users_id', '=', $userid)
                 ->orderByDesc('created_at')
                 ->paginate(8);
+                ->where('users.webshopid', '=', $webshopid);
         }
-        return view('dashboard', compact('allpackages'));
+        else {
+            $allpackages = $query
+                ->where('packages.users_id', '=', $userid);
+        }
+        if($request->Status!="") {
+            $allpackages->where('Status', $request->Status);
+        }
+
+        if($request->Sorting!="") {
+            $allpackages->orderBy('name', 'desc');
+        }
+        $allpackages = $allpackages->paginate(8);
+        $status = PackageStatus::cases();
+        $sorting = PackageSorting::cases();
+        return view('dashboard', compact('allpackages', 'status', 'sorting'));
     }
 
     public function addReview(Request $request,$id) {
@@ -50,7 +77,7 @@ class DashboardController extends Controller
         $user = auth()->user();
         $package = package::find($id);
         $package->makeReview($user,$request->review, "Review");
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function importCSV(Request $request) {
