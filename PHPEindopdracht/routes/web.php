@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('/dashboard', DashboardController::class)->middleware(['auth'])->name('index', 'dashboard');
 Route::get('/addreview/{id}', [DashboardController::class, 'addReview'])->middleware(['auth'])->name('addreview');
+Route::post('/import', [DashboardController::class, 'importCSV'])->middleware(['auth'])->name('importcsv');
 
 Route::controller(AdminDashboardController::class)->group(function() {
     Route::get('/getpdf/{var1}', 'getPDF')->name('getpdf');

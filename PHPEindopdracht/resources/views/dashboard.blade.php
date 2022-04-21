@@ -18,6 +18,19 @@
                             </ul>
                         </div>
                     @endif
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+                    <form action="{{Route('importcsv')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-4 offset-md-7">
+                                <input class="form-control" type="file" id="csvfile" name="csvfile" accept=".csv">
+                            </div>
+                            <button type="submit" class="btn btn-link col-md-1">Upload</button>
                     <form action= " {{route('dashboard')}} ">
                         <div class="row mb-2">
                             <div class="col-md-2 offset-md-7">
@@ -71,6 +84,9 @@
                         </div>
                     </div>
                     @endforeach
+                    @if($allpackages != null)
+                    {{ $allpackages->links() }}
+                    @endif
                 </div>
             </div>
         </div>

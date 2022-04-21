@@ -8,12 +8,21 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Digikraaft\ReviewRating\Models\Review;
+
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\PackageImport;
+use Error;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
+use PhpOffice\PhpSpreadsheet\Writer\Csv as WriterCsv;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 use App\enum;
 use App\enum\Package_Status;
 use App\enum\PackageSorting;
 use App\enum\PackageStatus;
 use Dompdf\FrameDecorator\Table;
 use PHPUnit\Framework\isNull;
+
 
 use function PHPUnit\Framework\isNull;
 
@@ -33,6 +42,15 @@ class DashboardController extends Controller
         if(!isNull($webshopid)) {
             $allpackages = $query
                 ->join('users', 'packages.users_id', '=', 'users.id')
+                ->where('users.webshopid', '=', $webshopid)
+                ->orderByDesc('created_at')
+                ->paginate(8);
+        }
+        else {
+            $allpackages = DB::table('packages')
+                ->where('packages.users_id', '=', $userid)
+                ->orderByDesc('created_at')
+                ->paginate(8);
                 ->where('users.webshopid', '=', $webshopid);
         }
         else {
@@ -62,6 +80,15 @@ class DashboardController extends Controller
         return redirect('/dashboard');
     }
 
+    public function importCSV(Request $request) {
+        if($request->hasFile("csvfile")) {
+            Excel::import(new PackageImport, request()->file("csvfile"));
+            return redirect()->back()->with('success','Data Geimporteerd');
+        }
+        else {
+            return redirect()->back()->withErrors(['msg' => 'Geen bestand geselecteerd']);
+        }
+    }
     public function create()
     {
         //
