@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\TracingController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,7 @@ Route::resource('/', TracingController::class);
 Route::get('/getpackage', [TracingController::class, 'getPackage'])->name('getpackage');
 
 Route::resource('admindashboard', AdminDashboardController::class)->middleware(['auth']);
+Route::resource('customers', CustomerController::class)->middleware(['auth']);
 
 Route::group(['middleware' => ['role:superadmin']], function() {
 

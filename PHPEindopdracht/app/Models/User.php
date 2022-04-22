@@ -43,4 +43,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function webshop() {
+        return $this->belongsTo(Webshop::class, 'webshops_id');
+    }
 }

@@ -20,6 +20,11 @@
                         {{ __('Admindashboard') }}
                     </x-nav-link>
                     @endhasanyrole
+                    @hasanyrole('superadmin|administratief medewerker')
+                    <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.index')">
+                        {{ __('Klantenoverzicht') }}
+                    </x-nav-link>
+                    @endhasanyrole
                 </div>
             </div>
 
