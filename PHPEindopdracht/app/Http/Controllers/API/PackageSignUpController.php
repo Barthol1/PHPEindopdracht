@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Package;
+use App\Models\Webshop;
 use Illuminate\Http\Request;
 
 class PackageSignUpController extends Controller
@@ -20,6 +21,25 @@ class PackageSignUpController extends Controller
 
     public function store(Request $request)
     {
+        $webshop = Webshop::find($request->user()->webshops_id);
+
+        if(!is_null($webshop)) {
+            $arr =  array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+            $count = 0;
+            $arrayOfInts = array();
+
+            while($count < 5) {
+                $value = array_rand($arr);
+                array_push($arrayOfInts, $value);
+                $count++;
+            }
+
+            $request['name'] = implode('', $arrayOfInts);
+            $request['sender_adres'] = $webshop->adres;
+            $request['sender_city'] = $webshop->place;
+            $request['sender_postalcode'] = $webshop->postalcode;
+        }
+
         $request->validate([
             'name'=>'required',
             'sender_adres'=>'required',
@@ -34,17 +54,31 @@ class PackageSignUpController extends Controller
         $request['status'] = "Aangemeld";
         $request['users_id'] = request()->user()->id;
 
-        return Package::create($request->all());
+        $package = Package::create($request->all());
+        return response()->json(["result" => "package created " . $package->name]);
     }
 
     public function update(Request $request, $id)
     {
         $package = Package::find($id);
-        return $package->update($request->all());
+        $package->update($request->all());
+
+        if($package) {
+            return ["result" => "deleted package " . $package->name];
+        }
+
+        return response()->json(["result" => "failed to delete package"]);
     }
 
     public function destroy($id)
     {
-        return Package::destroy($id);
+        $package = Package::find($id);
+        $package::destroy($id);
+
+        if($package) {
+            return ["result" => "deleted package " . $package->name];
+        }
+
+        return response()->json(["result" => "failed to delete package"]);
     }
 }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->foreignId('webshops_id')->nullable()->constrained();
+            $table->foreignId('transporters_id')->nullable()->constrained();
             $table->rememberToken();
             $table->string('api_token', 80)->unique()->nullable()->default(null);
             $table->timestamps();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Package;
 use App\Models\User;
 use App\Models\Webshop;
+use App\Rules\pickupDateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -19,12 +20,24 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $allpackages = Package::paginate(8);
+        $allpackages = null;
 
         if($user->getRoleNames() != null && $user->can("schrijven")) {
             $webshops = Webshop::all();
-            $clients = User::leftJoin('model_has_roles as m', 'm.model_id', '=', 'users.id')->whereNull('m.role_id')->get();
+            $clients = User::doesntHave('roles')->orderBy('name', 'ASC')->where('transporters_id', null)->get();
+            $allpackages = Package::orderBy('status')->orderBy('sender_city')->paginate(8);
+
             return view('admindashboard.index', compact(['clients', 'allpackages', 'webshops']));
+        }
+
+        if($user->can("lezen")) {
+            $allpackages = Package::orderBy('status')
+            ->orderBy('sender_city')
+            ->where('transporters_id', null)
+            ->where('status', 'Aangemeld')
+            ->orwhere('transporters_id', Auth::user()->transporters_id)
+            ->where('status', 'Onderweg')->paginate(8);
+            return view('admindashboard.index', compact('allpackages'));
         }
 
         return view('admindashboard.index', compact('allpackages'));
@@ -110,11 +123,32 @@ class AdminDashboardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function updateWebshopClient(Request $request)
     {
         $user = User::find($request->client);
         $user->webshops_id = $request->webshop;
         $user->save();
+
+        return redirect('/admindashboard');
+    }
+
+    public function pickupPackage(Request $request) {
+        $request->validate([
+            'time' => 'required',
+            'date' => ['required', new pickupDateTime()],
+        ]);
+
+        $selectedPackages = $request->selectedPackage;
+
+        if(!is_null($selectedPackages)) {
+            foreach ($selectedPackages as $selected) {
+                $package = Package::find($selected);
+                $package->transporters_id = Auth::user()->transporters_id;
+                $package->pick_up_time = date($request->date . ' ' . $request->time);
+                $package->status = "Onderweg";
+                $package->save();
+            }
+        }
 
         return redirect('/admindashboard');
     }

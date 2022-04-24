@@ -63,9 +63,28 @@ class RolesAndPermissionsSeeder extends Seeder
             'name' => 'Pieter Koekenbakker',
             'email' => 'pieter@koek.com',
             'password' => bcrypt('pieter'),
-            'webshops_id' => 1
+            'webshops_id' => 1,
         ]);
         $user['api_token'] = $user->createToken('api_token')->plainTextToken;
         $user->save();
+
+        $user = User::factory()->create([
+            'name' => 'DHL gebruiker 1',
+            'email' => 'dhl@gmail.com',
+            'password' => bcrypt('DHL'),
+            'transporters_id' => 1,
+        ]);
+        $user->givePermissionTo($read);
+        $user->save();
+
+        $user = User::factory()->create([
+            'name' => 'UPS gebruiker 1',
+            'email' => 'ups@gmail.com',
+            'password' => bcrypt('UPS'),
+            'transporters_id' => 2,
+        ]);
+        $user->givePermissionTo($read);
+        $user->save();
+
     }
 }

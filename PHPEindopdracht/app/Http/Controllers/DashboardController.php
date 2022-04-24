@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\package;
+use App\Models\Role;
+use App\Models\Package;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,16 +21,46 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $userid = Auth::user()->id;
-        $webshopid = Auth::user()->webshops_id;
-        $packages = Package::with('User')->where('users_id', '=', $userid)->paginate(8);
+        $client = User::where('users.id', Auth::user()->id)->first();
+        $packages = Package::orderBy('status')
+        ->orderBy('sender_city')
+        ->where('users_id', Auth::user()->id)
+        ->paginate(8);
 
-        return view('dashboard', compact('userid', 'webshopid', 'packages'));
+        return view('dashboard.index', compact('client', 'packages'));
+    }
+
+    public function getOrder() {
+
+
+        return view('dashboard.index', compact('packages'));
     }
 
     public function addReview(Request $request,$id) {
         $user = auth()->user()->id;
 
+    }
+
+    public function editPackage($id)
+    {
+        $package = Package::where('users_id', Auth::user()->id)->find($id);
+
+        if(is_null($package)) {
+            $packages = Package::orderBy('status')
+            ->orderBy('sender_city')
+            ->where('users_id', Auth::user()->id)
+            ->paginate(8);
+
+            return view('dashboard.index', compact('packages'));
+        }
+
+        return view('dashboard.editpackage', compact('package'));
+    }
+
+    public function updatePackage(Request $request, $id)
+    {
+        Package::find($id)->update($request->all());
+        return redirect('/');
     }
 
     public function create()

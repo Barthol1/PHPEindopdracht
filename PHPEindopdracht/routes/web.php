@@ -16,29 +16,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('/', DashboardController::class)->middleware(['auth'])->name('index', 'dashboard');
-
-Route::controller(AdminDashboardController::class)->group(function() {
-    Route::get('/getpdf/{var1}', 'getPDF')->name('getpdf');
-    Route::get('/allpdf', 'getAllPDF')->name('getallpdf');
+Route::controller(DashboardController::class)->group(function() {
+    Route::get('/editpackage/{id}', 'editPackage')->name('editPackage');
+    Route::put('/updatePackage/{id}', 'updatePackage')->name('updatePackage');
 });
 
-Route::resource('admindashboard', AdminDashboardController::class)->middleware(['auth']);
-Route::put('admindashboard', [AdminDashboardController::class, 'update'])->name('update');
-
-Route::group(['middleware' => ['role:superadmin']], function() {
-
-});
-Route::group(['middleware' => ['role:administratief medewerker']], function() {
-
-});
-Route::group(['middleware' => ['role:pakket inpakker']], function() {
-
-});
-Route::group(['middleware' => ['role_or_permission:superadmin|schrijven']], function() {
-
-});
-Route::group(['middleware' => ['role_or_permission:superadmin|lezen']], function() {
-
+Route::group(['middleware' => ['role_or_permission:superadmin|administratief medewerker|pakket inpakker|lezen|schrijven']], function() {
+    Route::resource('admindashboard', AdminDashboardController::class)->middleware(['auth']);
+    Route::controller(AdminDashboardController::class)->group(function() {
+        Route::get('/getpdf/{var1}', 'getPDF')->name('getpdf');
+        Route::get('/allpdf', 'getAllPDF')->name('getallpdf');
+        Route::put('/', 'updateWebshopClient')->name('updateWebshopClient');
+        Route::put('/admindashboard', 'pickupPackage')->name('pickupPackage');
+    });
 });
 
 require __DIR__.'/auth.php';

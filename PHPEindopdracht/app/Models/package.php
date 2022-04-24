@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Digikraaft\ReviewRating\Traits\HasReviewRating;
+use Symfony\Component\Mailer\Transport;
 
 class Package extends Model
 {
@@ -29,5 +30,9 @@ class Package extends Model
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function transporter() {
+        return $this->belongsTo(Transporter::class);
     }
 }

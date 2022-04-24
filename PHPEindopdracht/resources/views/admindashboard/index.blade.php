@@ -14,51 +14,79 @@
                             <a class="btn btn-primary" href="{{ route('getallpdf')}}">Maak Alle Labels</a>
                         </div>
                     </div>
-                    @foreach($allpackages as $a)
-                    <div class="card mb-2">
-                        <div class="card-header">
-                            {{$a->status}}
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <h5 class="card-title col-md-2">naam: {{$a->name}}</h5>
-                                @can('schrijven')
-                                <a class="btn btn-primary offset-md-8 col-md-2" href="{{ route('getpdf', $a->id) }}">Download Label</a>
-                                @endcan
-                            </div>
-                            <p class="card-text">zendadres: {{$a->sender_adres}}</p>
-                            @can('schrijven')
-                            <form action="{{ route('packages.destroy', $a->id) }}" method="post" class="flex justify-center">
+                    @can("lezen")
+                        @unlessrole("pakket inpakker|administratief medewerker|superadmin")
+                        <form action="{{ route('pickupPackage') }}" method="post" enctype="multipart/form-data">
                             @csrf
-                            @method('Delete')
-                                <button type="submit" class="block">Verwijderen<button>
-                            </form>
-                            <a href="" class="block">Aanpassen</a>
-                            @endcan
-                        </div>
-                    </div>
-                    @endforeach
-                    @foreach($allpackages as $a)
+                            @method("PUT")
+                            <div class="flex flex-col align-items-end p-2" style="background: gray;">
+                            <p class="h5">Kies een datum voor het ophalen de pakket(ten)</p>
+                                <div>
+                                    <input type="date" data-date="" data-date-format="DD/MM/YYYY" name="date" class="mb-2">
+                                    <input type="time" data-date="" data-date-format="HH:mm" name="time" class="mb-2">
+                                </div>
+                                <div>
+                                    <a class="btn btn-primary">
+                                        <input type="submit" value="Pick Up Pakket(ten)">
+                                    </a>
+                                </div>
+                            </div>
+                        @endunlessrole
+                    @endcan
+                    @if(!empty($allpackages))
+                        @foreach($allpackages as $ap)
+                            <div class="card mb-2">
+                                <div class="card-header flex justify-between">
+                                    <p class="font-semibold">{{$ap->status}}</p>
+                                    @can("lezen")
+                                        @unlessrole("pakket inpakker|administratief medewerker|superadmin")
+                                            @if($ap->status == "Aangemeld")
+                                                <input type="checkbox" name="selectedPackage[]" value="{{ $ap->id }}">
+                                            @endif
+                                        @endunlessrole
+                                    @endcan
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <p class="font-semibold">Verzender</p>
+                                            <p>Naam: {{$ap->name}}</p>
+                                            <p>Adres: {{$ap->sender_adres}}</p>
+                                            <p>Stad: {{$ap->sender_city}}</p>
+                                            <p>Postcode: {{$ap->sender_postalcode}}</p>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold">Ontvanger</p>
+                                            <p>Naam: {{$ap->receiver_name}}</p>
+                                            <p>Adres: {{$ap->receiver_adres}}</p>
+                                            <p>Stad: {{$ap->receiver_city}}</p>
+                                            <p>Postcode: {{$ap->receiver_postalcode}}</p>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-start">
+                                            <a class="btn btn-primary mr-2" href="{{ route('getpdf', $ap->id) }}">Download Label</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        @endforeach
+                    @endif
                     @if($allpackages != null)
                     {{ $allpackages->links() }}
                     @endif
-                    @endforeach
                 </div>
             </div>
         </div>
     </div>
-
     @hasanyrole('superadmin|administratief medewerker')
-    <!-- @role('pakket inpakker')
-    @endrole -->
     @can('schrijven')
     <div class="flex justify-center">
-        <form action="{{ route('admindashboard.update', '$clients->id') }}" method="post">
+        <form action="{{ route('updateWebshopClient') }}" method="post">
         @csrf
         @method('PUT')
             <div class="flex flex-wrap -mx-3 mb-6">
                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                    <h2>Toevoegen klant aan webshop:</h2>
+                    <p>Toevoegen klant aan webshop:</p>
 
                     <label for="name" class="block uppercase">Klantnaam</label>
                     @if(!empty($clients))
@@ -80,9 +108,29 @@
                 </div>
             </div>
             <div class="flex justify-center">
-                <button type="submit" value="webshop account" class="btn btn-dark bg-dark mt-2">webshop account aanmaken</button>
+                <button type="submit" class="btn btn-dark bg-dark mt-2">webshop account aanmaken / wijzigen</button>
             </div>
         </form>
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Klantnaam</th>
+                        <th>Webshop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($clients as $u)
+                        @if(!empty($u->webshop))
+                            <tr>
+                                <td>{{$u->name}} / {{$u->email}}</td>
+                                <td>{{$u->webshop->name}}</td>
+                            </tr>
+                        @endif
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
     @endcan
     @endhasanyrole

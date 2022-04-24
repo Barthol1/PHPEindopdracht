@@ -14,6 +14,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     protected $table = 'users';
+    // protected $id = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -25,6 +26,7 @@ class User extends Authenticatable
         'email',
         'password',
         'webshops_id',
+        'transporters_id',
         'api_token',
     ];
 
@@ -48,10 +50,18 @@ class User extends Authenticatable
     ];
 
     public function webshop(){
-        return $this->belongsTo(Webshop::class);
+        return $this->belongsTo(Webshop::class, 'webshops_id');
     }
 
     public function packages() {
         return $this->hasMany(Package::class);
+    }
+
+    public function role() {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function transporter(){
+        return $this->belongsTo(Transporter::class);
     }
 }
