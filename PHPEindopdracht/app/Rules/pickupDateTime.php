@@ -28,7 +28,7 @@ class pickupDateTime implements Rule
     {
         $check = (
             $value >= Carbon::now()->addDays(1)->toDateString()
-            && Carbon::now()->timezone('Europe/Amsterdam')->toTimeString() <= Carbon::parse("11:00:00")->format("H:i:s")
+            && Carbon::now()->timezone('Europe/Amsterdam')->toTimeString() <= Carbon::parse("15:00:00")->format("H:i:s")
         )
         || $value >= Carbon::now()->addDays(2)->toDateString();
 
@@ -42,6 +42,13 @@ class pickupDateTime implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'Write your own message...';
+
+        // if(Carbon::now()->timezone('Europe/Amsterdam')->toTimeString() > Carbon::parse("15:00:00")->format("H:i:s")) {
+        //     return $message += "plan voor de 2e dag";
+        // }
+        // else if($value != Carbon::now()->addDays(1)->toDateString()) {
+        //     return $message += "";
+        // }
     }
 }

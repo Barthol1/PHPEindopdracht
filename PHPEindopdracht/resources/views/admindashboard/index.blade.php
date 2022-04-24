@@ -4,12 +4,10 @@
             {{ __('AdminDashboard') }}
         </h2>
     </x-slot>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-
                     <form action= " {{route('admindashboard.index')}} ">
                     <div class="row mb-2">
                         <div class="col-md-2">
@@ -35,7 +33,6 @@
                             <button class="btn btn-link link-dark" type="submit">Sorteren</button>
                         </div>
                     </div>
-                    </form>
                     @can("lezen")
                         @unlessrole("pakket inpakker|administratief medewerker|superadmin")
                         <form action="{{ route('pickupPackage') }}" method="post" enctype="multipart/form-data">

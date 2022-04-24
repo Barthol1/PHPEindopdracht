@@ -145,8 +145,8 @@ class AdminDashboardController extends Controller
 
     public function pickupPackage(Request $request) {
         $request->validate([
+            'date' => ['required', new pickupDateTime],
             'time' => 'required',
-            'date' => ['required', new pickupDateTime()],
         ]);
 
         $selectedPackages = $request->selectedPackage;
