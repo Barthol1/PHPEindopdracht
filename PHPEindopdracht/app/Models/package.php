@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use DGvai\Review\Reviewable;
 
-class package extends Model
+class Package extends Model
 {
     use HasFactory;
     use Reviewable;

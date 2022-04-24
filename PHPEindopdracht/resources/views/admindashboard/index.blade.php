@@ -35,6 +35,7 @@
                             <button class="btn btn-link link-dark" type="submit">Sorteren</button>
                         </div>
                     </div>
+                    </form>
                     @can("lezen")
                         @unlessrole("pakket inpakker|administratief medewerker|superadmin")
                         <form action="{{ route('pickupPackage') }}" method="post" enctype="multipart/form-data">

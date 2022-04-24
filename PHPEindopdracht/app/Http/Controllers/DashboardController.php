@@ -2,36 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
 use App\Models\Package;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
-
-use app\enum\status as EnumStatus;
-use App\Models\package;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Digikraaft\ReviewRating\Models\Review;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\PackageImport;
-use Error;
-use PhpOffice\PhpSpreadsheet\Reader\Csv;
-use PhpOffice\PhpSpreadsheet\Writer\Csv as WriterCsv;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-use App\enum;
-use App\enum\Package_Status;
 use App\enum\PackageSorting;
 use App\enum\PackageStatus;
-use Dompdf\FrameDecorator\Table;
-use PHPUnit\Framework\isNull;
-
-use function PHPUnit\Framework\isNull;
 
 class DashboardController extends Controller
 {
@@ -43,37 +23,22 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $client = User::where('users.id', Auth::user()->id)->first();
-        $packages = Package::orderBy('status')
-        ->orderBy('sender_city')
-        ->where('users_id', Auth::user()->id)
-        ->paginate(8);
-
-        // $webshopid = auth()->user()->webshops_id;
-        // $userid = auth()->user()->id;
-
-        // $query = DB::table('packages');
-        // if(!isNull($webshopid)) {
-        //     $allpackages = $query
-        //         ->join('users', 'packages.users_id', '=', 'users.id')
-        //         ->where('users.webshopid', '=', $webshopid);
-        // }
-        // else {
-        //     $allpackages = $query
-        //         ->where('packages.users_id', '=', $userid);
-        // }
+        $packages = Package::where('users_id', Auth::user()->id);
 
         if($request->Status!="") {
-            $allpackages->where('Status', $request->Status);
+            $packages->where('Status', $request->Status);
         }
 
         if($request->Sorting!="") {
-            $allpackages->orderBy('name', 'desc');
+            $packages->orderBy('name', 'desc');
         }
-        $allpackages = $allpackages->paginate(8);
+
         $status = PackageStatus::cases();
         $sorting = PackageSorting::cases();
 
-        return view('dashboard', compact('allpackages', 'status', 'sorting'));
+        $packages = $packages->paginate(8);
+
+        return view('dashboard.index', compact('packages', 'status', 'sorting'));
     }
 
     public function addReview(Request $request,$id) {

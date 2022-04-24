@@ -26,7 +26,10 @@ class pickupDateTime implements Rule
      */
     public function passes($attribute, $value)
     {
-        $check = ($value >= Carbon::now()->addDays(1)->toDateString() && Carbon::now()->timezone('Europe/Amsterdam')->toTimeString() <= Carbon::parse("11:00:00")->format("H:i:s"))
+        $check = (
+            $value >= Carbon::now()->addDays(1)->toDateString()
+            && Carbon::now()->timezone('Europe/Amsterdam')->toTimeString() <= Carbon::parse("11:00:00")->format("H:i:s")
+        )
         || $value >= Carbon::now()->addDays(2)->toDateString();
 
         return $check;

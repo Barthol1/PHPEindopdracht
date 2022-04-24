@@ -16,8 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-Route::resource('/', DashboardController::class)->middleware(['auth'])->name('index', 'dashboard');
+Route::resource('/dashboard', DashboardController::class)->middleware(['auth'])->name('index', 'dashboard');
 Route::controller(DashboardController::class)->group(function() {
     Route::get('/editpackage/{id}', 'editPackage')->name('editPackage');
     Route::put('/updatePackage/{id}', 'updatePackage')->name('updatePackage');
@@ -26,7 +25,7 @@ Route::controller(DashboardController::class)->group(function() {
 });
 
 Route::group(['middleware' => ['role_or_permission:superadmin|administratief medewerker|pakket inpakker|lezen|schrijven']], function() {
-    Route::resource('admindashboard', AdminDashboardController::class)->middleware(['auth']);
+    Route::resource('/admindashboard', AdminDashboardController::class)->middleware(['auth']);
     Route::controller(AdminDashboardController::class)->group(function() {
         Route::get('/getpdf/{var1}', 'getPDF')->name('getpdf');
         Route::get('/allpdf', 'getAllPDF')->name('getallpdf');

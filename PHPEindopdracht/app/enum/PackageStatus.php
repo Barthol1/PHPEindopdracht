@@ -1,6 +1,6 @@
-<?php 
+<?php
 namespace App\enum;
-enum PackageStatus : string 
+enum PackageStatus : string
 {
     case AANGEMELD = 'Aangemeld';
     case UITGEPRINT =  'Uitgeprint';
