@@ -4,13 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Digikraaft\ReviewRating\Traits\HasReviewRating;
-use Symfony\Component\Mailer\Transport;
+use DGvai\Review\Reviewable;
 
-class Package extends Model
+class package extends Model
 {
     use HasFactory;
-    use HasReviewRating;
+    use Reviewable;
 
     protected $table = 'packages';
     protected $id = 'id';

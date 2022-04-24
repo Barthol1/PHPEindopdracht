@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\TracingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,10 +16,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::resource('/', DashboardController::class)->middleware(['auth'])->name('index', 'dashboard');
 Route::controller(DashboardController::class)->group(function() {
     Route::get('/editpackage/{id}', 'editPackage')->name('editPackage');
     Route::put('/updatePackage/{id}', 'updatePackage')->name('updatePackage');
+    Route::get('/addreview/{id}', 'addReview')->name('addreview');
+    Route::post('/import', 'importCSV')->name('importcsv');
 });
 
 Route::group(['middleware' => ['role_or_permission:superadmin|administratief medewerker|pakket inpakker|lezen|schrijven']], function() {
@@ -30,5 +34,8 @@ Route::group(['middleware' => ['role_or_permission:superadmin|administratief med
         Route::put('/admindashboard', 'pickupPackage')->name('pickupPackage');
     });
 });
+
+Route::resource('/', TracingController::class);
+Route::get('/getpackage', [TracingController::class, 'getPackage'])->name('getpackage');
 
 require __DIR__.'/auth.php';

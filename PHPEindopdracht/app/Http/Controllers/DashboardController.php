@@ -10,6 +10,27 @@ use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 
+use app\enum\status as EnumStatus;
+use App\Models\package;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Digikraaft\ReviewRating\Models\Review;
+
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\PackageImport;
+use Error;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
+use PhpOffice\PhpSpreadsheet\Writer\Csv as WriterCsv;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+use App\enum;
+use App\enum\Package_Status;
+use App\enum\PackageSorting;
+use App\enum\PackageStatus;
+use Dompdf\FrameDecorator\Table;
+use PHPUnit\Framework\isNull;
+
 use function PHPUnit\Framework\isNull;
 
 class DashboardController extends Controller
@@ -19,7 +40,7 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $client = User::where('users.id', Auth::user()->id)->first();
         $packages = Package::orderBy('status')
@@ -27,18 +48,42 @@ class DashboardController extends Controller
         ->where('users_id', Auth::user()->id)
         ->paginate(8);
 
-        return view('dashboard.index', compact('client', 'packages'));
-    }
+        // $webshopid = auth()->user()->webshops_id;
+        // $userid = auth()->user()->id;
 
-    public function getOrder() {
+        // $query = DB::table('packages');
+        // if(!isNull($webshopid)) {
+        //     $allpackages = $query
+        //         ->join('users', 'packages.users_id', '=', 'users.id')
+        //         ->where('users.webshopid', '=', $webshopid);
+        // }
+        // else {
+        //     $allpackages = $query
+        //         ->where('packages.users_id', '=', $userid);
+        // }
 
+        if($request->Status!="") {
+            $allpackages->where('Status', $request->Status);
+        }
 
-        return view('dashboard.index', compact('packages'));
+        if($request->Sorting!="") {
+            $allpackages->orderBy('name', 'desc');
+        }
+        $allpackages = $allpackages->paginate(8);
+        $status = PackageStatus::cases();
+        $sorting = PackageSorting::cases();
+
+        return view('dashboard', compact('allpackages', 'status', 'sorting'));
     }
 
     public function addReview(Request $request,$id) {
-        $user = auth()->user()->id;
-
+        $request->validate([
+            'review' => 'required'
+        ]);
+        $user = auth()->user();
+        $package = package::find($id);
+        $package->makeReview($user,$request->review, "Review");
+        return redirect('/dashboard');
     }
 
     public function editPackage($id)
@@ -61,6 +106,16 @@ class DashboardController extends Controller
     {
         Package::find($id)->update($request->all());
         return redirect('/');
+    }
+
+    public function importCSV(Request $request) {
+        if($request->hasFile("csvfile")) {
+            Excel::import(new PackageImport, request()->file("csvfile"));
+            return redirect()->back()->with('success','Data Geimporteerd');
+        }
+        else {
+            return redirect()->back()->withErrors(['msg' => 'Geen bestand geselecteerd']);
+        }
     }
 
     public function create()

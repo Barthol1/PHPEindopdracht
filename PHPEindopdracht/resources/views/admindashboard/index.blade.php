@@ -9,9 +9,30 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <div class="row mb-4">
-                        <div class="col-md-2 offset-md-10">
+
+                    <form action= " {{route('admindashboard.index')}} ">
+                    <div class="row mb-2">
+                        <div class="col-md-2">
                             <a class="btn btn-primary" href="{{ route('getallpdf')}}">Maak Alle Labels</a>
+                        </div>
+                        <div class="col-md-2 offset-md-5">
+                            <select class="form-select" aria-label="Default select example" name="Status">
+                                <option value="" selected>-- Status --</option>
+                                @foreach($status as $s)
+                                <option value="{{$s->value}}">{{$s->value}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-select" aria-label="Default select example" name="Sorting">
+                                <option value="" selected>-- Filter --</option>
+                                @foreach($sorting as $f)
+                                <option value="{{$f->value}}">{{strtolower($f->name)}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-link link-dark" type="submit">Sorteren</button>
                         </div>
                     </div>
                     @can("lezen")
