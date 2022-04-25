@@ -38,7 +38,7 @@ class DashboardController extends Controller
 
         $packages = $packages->paginate(8);
 
-        return view('dashboard.index', compact('packages', 'status', 'sorting'));
+        return view('dashboard.index', compact('client', 'packages', 'status', 'sorting'));
     }
 
     public function addReview(Request $request,$id) {
