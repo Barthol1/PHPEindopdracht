@@ -22,7 +22,7 @@ use App\enum\PackageSorting;
 use App\enum\PackageStatus;
 use Dompdf\FrameDecorator\Table;
 use PHPUnit\Framework\isNull;
-
+use Throwable;
 
 use function PHPUnit\Framework\isNull;
 
@@ -72,13 +72,19 @@ class DashboardController extends Controller
     }
 
     public function importCSV(Request $request) {
-        if($request->hasFile("csvfile")) {
-            Excel::import(new PackageImport, request()->file("csvfile"));
-            return redirect()->back()->with('success','Data Geimporteerd');
+        try {
+            if($request->hasFile("csvfile")) {
+                Excel::import(new PackageImport, request()->file("csvfile"));
+                return redirect()->back()->with('success','Data Geimporteerd');
+            }
+            else {
+                return redirect()->back()->withErrors(['msg' => 'Geen bestand geselecteerd']);
+            }
         }
-        else {
-            return redirect()->back()->withErrors(['msg' => 'Geen bestand geselecteerd']);
+        catch(Throwable $e) {
+            return redirect()->back()->withErrors(['msg' => 'Er ging iets fout, check het bestand en probeer opnieuw']);
         }
+        
     }
     public function create()
     {
