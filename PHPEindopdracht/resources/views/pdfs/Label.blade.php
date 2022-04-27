@@ -19,7 +19,7 @@
         <p>{{$a->sender_postalcode}}</p>
         <p class="mt-5">Ontvanger: {{$a->receiver_adres}}, {{$a->receiver_city}}</p>
         <p>{{$a->receiver_postalcode}}</p>
-        <div class="mt-5">{!! DNS1D::getBarcodeHTML($a->name, 'PHARMA') !!}</div>
+        <div class="mt-5">{!! DNS1D::getBarcodeHTML($a->name, 'C128') !!}</div>
     </div>
     <div class="page-break"></div>
     @endforeach

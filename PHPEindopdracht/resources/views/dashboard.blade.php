@@ -63,9 +63,14 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <h5 class="card-title col-md-2">naam: {{$a->name}}</h5>
+                                <h5 class="card-title col-md-6 fw-bold">Naam: {{$a->name}}</h5>
                             </div>
-                            <p class="card-text">zendadres: {{$a->sender_adres}}</p>
+                            <div class="verzender mb-2">
+                                <p class="card-text">Adres van verzender: {{$a->sender_adres}}</p>
+                            </div>
+                            <div class="ontvanger">
+                                <p class="card-text">Adres van ontvanger: {{$a->receiver_adres}}</p>
+                            </div>
                             @if($a->status == "Bezorgd")
                             <form action="{{route('addreview', $a->id)}}">
                                 <div class="row mt-3">

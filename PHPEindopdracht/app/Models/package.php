@@ -17,6 +17,7 @@ class package extends Model
     protected $fillable = [
         'name',
         'status',
+        'sender_name',
         'sender_adres',
         'sender_city',
         'sender_postalcode',
