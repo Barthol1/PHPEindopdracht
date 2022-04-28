@@ -16,22 +16,34 @@
                             <div class="col-md-2 offset-md-5">
                                 <select class="form-select" aria-label="Default select example" name="Status">
                                     <option value="" selected>-- Status --</option>
-                                    @foreach($status as $s)
-                                    <option value="{{$s->value}}">{{$s->value}}</option>
-                                    @endforeach
+                                    @if(!empty($status))
+                                        @foreach($status as $s)
+                                            <option value="{{$s->value}}">{{$s->value}}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <select class="form-select" aria-label="Default select example" name="Sorting">
                                     <option value="" selected>-- Filter --</option>
-                                    @foreach($sorting as $f)
-                                    <option value="{{$f->value}}">{{strtolower($f->name)}}</option>
-                                    @endforeach
+                                    @if(!empty($sorting))
+                                        @foreach($sorting as $f)
+                                            <option value="{{$f->value}}">{{strtolower($f->name)}}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                             <div class="col-md-1">
                                 <button class="btn btn-link link-dark" type="submit">Sorteren</button>
                             </div>
+                        </div>
+                    </form>
+                    <form action="{{ route('adminSearch') }}" method="GET" class="mb-5">
+                        <div class="input-group mb-3">
+                            <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
+                            <a class="btn btn-primary">
+                                <button type="submit" id="button-addon2">Search</button>
+                            </a>
                         </div>
                     </form>
                     @can("lezen")
@@ -53,15 +65,15 @@
                             </div>
                         @endunlessrole
                     @endcan
-                    @if(!empty($allpackages))
-                        @foreach($allpackages as $ap)
+                    @if(!empty($packages))
+                        @foreach($packages as $p)
                             <div class="card mb-2">
                                 <div class="card-header flex justify-between">
-                                    <p class="font-semibold">{{$ap->status}}</p>
+                                    <p class="font-semibold">{{$p->status}}</p>
                                     @can("lezen")
                                         @unlessrole("pakket inpakker|administratief medewerker|superadmin")
-                                            @if($ap->status == "Aangemeld")
-                                                <input type="checkbox" name="selectedPackage[]" value="{{ $ap->id }}">
+                                            @if($p->status == "Aangemeld")
+                                                <input type="checkbox" name="selectedPackage[]" value="{{ $p->id }}">
                                             @endif
                                         @endunlessrole
                                     @endcan
@@ -70,20 +82,20 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <p class="font-semibold">Verzender</p>
-                                            <p>Naam: {{$ap->name}}</p>
-                                            <p>Adres: {{$ap->sender_adres}}</p>
-                                            <p>Stad: {{$ap->sender_city}}</p>
-                                            <p>Postcode: {{$ap->sender_postalcode}}</p>
+                                            <p>Naam: {{$p->name}}</p>
+                                            <p>Adres: {{$p->sender_adres}}</p>
+                                            <p>Stad: {{$p->sender_city}}</p>
+                                            <p>Postcode: {{$p->sender_postalcode}}</p>
                                         </div>
                                         <div>
                                             <p class="font-semibold">Ontvanger</p>
-                                            <p>Naam: {{$ap->receiver_name}}</p>
-                                            <p>Adres: {{$ap->receiver_adres}}</p>
-                                            <p>Stad: {{$ap->receiver_city}}</p>
-                                            <p>Postcode: {{$ap->receiver_postalcode}}</p>
+                                            <p>Naam: {{$p->receiver_name}}</p>
+                                            <p>Adres: {{$p->receiver_adres}}</p>
+                                            <p>Stad: {{$p->receiver_city}}</p>
+                                            <p>Postcode: {{$p->receiver_postalcode}}</p>
                                         </div>
                                         <div class="d-flex flex-row align-items-start">
-                                            <a class="btn btn-primary mr-2" href="{{ route('getpdf', $ap->id) }}">Download Label</a>
+                                            <a class="btn btn-primary mr-2" href="{{ route('getpdf', $p->id) }}">Download Label</a>
                                         </div>
                                     </div>
                                 </div>
@@ -91,8 +103,8 @@
                         @endforeach
                     </form>
                     @endif
-                    @if($allpackages != null)
-                    {{ $allpackages->links() }}
+                    @if(!empty($packages))
+                        {{ $packages->links() }}
                     @endif
                 </div>
             </div>
@@ -140,14 +152,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($clients as $u)
-                        @if(!empty($u->webshop))
-                            <tr>
-                                <td>{{$u->name}} / {{$u->email}}</td>
-                                <td>{{$u->webshop->name}}</td>
-                            </tr>
-                        @endif
-                    @endforeach
+                    @if(!empty($clients))
+                        @foreach ($clients as $u)
+                            @if(!empty($u->webshop))
+                                <tr>
+                                    <td>{{$u->name}} / {{$u->email}}</td>
+                                    <td>{{$u->webshop->name}}</td>
+                                </tr>
+                            @endif
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>

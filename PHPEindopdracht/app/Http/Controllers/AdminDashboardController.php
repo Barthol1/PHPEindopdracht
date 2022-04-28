@@ -22,36 +22,36 @@ class AdminDashboardController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $allpackages = null;
+        $packages = null;
         $clients = null;
         $webshops = null;
 
         if($user->getRoleNames() != null && $user->can("schrijven")) {
             $webshops = Webshop::all();
-            $allpackages = Package::select();
+            $packages = Package::select();
             $clients = User::doesntHave('roles')->orderBy('name', 'asc')->where('transporters_id', null)->get();
         }
         else if($user->can("lezen")) {
-            $allpackages = Package::where('transporters_id', null)
+            $packages = Package::where('transporters_id', null)
             ->where('status', 'Aangemeld')
-            ->orwhere('transporters_id', Auth::user()->transporters_id)
+            ->orWhere('transporters_id', Auth::user()->transporters_id)
             ->where('status', 'Onderweg');
         }
 
         if($request->Status!="") {
-            $allpackages->where('Status', $request->Status);
+            $packages->where('Status', $request->Status);
         }
 
         if($request->Sorting!="") {
-            $allpackages->orderBy('name', 'desc');
+            $packages->orderBy('name', 'desc');
         }
 
         $status = PackageStatus::cases();
         $sorting = PackageSorting::cases();
 
-        $allpackages = $allpackages->paginate(8);
+        $packages = $packages->paginate(8);
 
-        return view('admindashboard.index', compact('clients', 'allpackages', 'webshops', 'status', 'sorting'));
+        return view('admindashboard.index', compact('clients', 'packages', 'webshops', 'status', 'sorting'));
     }
 
     public function getPDF($id) {
@@ -76,6 +76,48 @@ class AdminDashboardController extends Controller
         view()->share('package', $data);
         $pdf = PDF::loadView('pdfs.Label', $data);
         return $pdf->download($package->first()->name.'.pdf');
+    }
+
+    public function search(Request $request) {
+        $user = Auth::user();
+        $packages = null;
+
+        if($request->filled('search') && $user->getRoleNames() != null && $user->can("schrijven")) {
+            $packages = Package::search($request->search);
+        }
+        else if($user->can("lezen")) {
+
+
+            $packages = Package::search($request->search);
+
+            // $packages->filter(function ($model, $key) {
+
+            //     return $model->unsearchable();
+
+            // });
+
+            // $packages = where(function($query) {
+                // $packages->where('transporters_id', null)
+                // ->where('status', 'Aangemeld')
+                // ->orWhere('transporters_id', Auth::user()->transporters_id)
+                // ->where('status', 'Onderweg');
+            // });
+        }
+
+        if($request->Status!="") {
+            $packages->where('Status', $request->Status);
+        }
+
+        if($request->Sorting!="") {
+            $packages->orderBy('name', 'desc');
+        }
+
+        $status = PackageStatus::cases();
+        $sorting = PackageSorting::cases();
+
+        // $packages = $packages->paginate(8);
+
+        return view('admindashboard.index', compact('packages'));
     }
 
     public function webshopstore(Request $request)

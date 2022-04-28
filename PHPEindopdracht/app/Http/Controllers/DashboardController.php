@@ -83,6 +83,18 @@ class DashboardController extends Controller
         }
     }
 
+    public function search(Request $request) {
+        $packages = Package::select();
+
+        if($request->filled('search')) {
+            $packages = Package::search($request->search);
+        }
+
+        $packages = $packages->where('users_id', Auth::user()->id)->paginate(8);
+
+        return view('dashboard.index', compact('packages'));
+    }
+
     public function create()
     {
         //

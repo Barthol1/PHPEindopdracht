@@ -38,22 +38,34 @@
                             <div class="col-md-2 offset-md-7">
                                 <select class="form-select" aria-label="Default select example" name="Status">
                                     <option value="" selected>-- Status --</option>
-                                    @foreach($status as $s)
-                                    <option value="{{$s->value}}">{{$s->value}}</option>
-                                    @endforeach
+                                    @if(!empty($status))
+                                        @foreach($status as $s)
+                                            <option value="{{$s->value}}">{{$s->value}}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <select class="form-select" aria-label="Default select example" name="Sorting">
                                     <option value="" selected>-- Filter --</option>
-                                    @foreach($sorting as $f)
-                                    <option value="{{$f->value}}">{{strtolower($f->name)}}</option>
-                                    @endforeach
+                                    @if(!empty($sorting))
+                                        @foreach($sorting as $f)
+                                            <option value="{{$f->value}}">{{strtolower($f->name)}}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                             <div class="col-md-1">
                                 <button class="btn btn-link link-dark" type="submit">Sorteren</button>
                             </div>
+                        </div>
+                    </form>
+                    <form action="{{ route('dashboardSearch') }}" method="GET" class="mb-5">
+                        <div class="input-group mb-3">
+                            <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
+                            <a class="btn btn-primary">
+                                <button type="submit" id="button-addon2">Search</button>
+                            </a>
                         </div>
                     </form>
                     @foreach($packages as $p)
@@ -106,7 +118,7 @@
                             </div>
                         </div>
                     @endforeach
-                    @if(!is_null($packages))
+                    @if(!empty($packages))
                         {{ $packages->links() }}
                     @endif
                 </div>

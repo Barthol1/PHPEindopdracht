@@ -22,6 +22,7 @@ Route::controller(DashboardController::class)->group(function() {
     Route::put('/updatePackage/{id}', 'updatePackage')->name('updatePackage');
     Route::get('/addreview/{id}', 'addReview')->name('addreview');
     Route::post('/import', 'importCSV')->name('importcsv');
+    Route::get('/dashboardSearch', 'search')->name('dashboardSearch');
 });
 
 Route::group(['middleware' => ['role_or_permission:superadmin|administratief medewerker|pakket inpakker|lezen|schrijven']], function() {
@@ -29,8 +30,9 @@ Route::group(['middleware' => ['role_or_permission:superadmin|administratief med
     Route::controller(AdminDashboardController::class)->group(function() {
         Route::get('/getpdf/{var1}', 'getPDF')->name('getpdf');
         Route::get('/allpdf', 'getAllPDF')->name('getallpdf');
-        Route::put('/', 'updateWebshopClient')->name('updateWebshopClient');
-        Route::put('/admindashboard', 'pickupPackage')->name('pickupPackage');
+        Route::get('/adminSearch', 'search')->name('adminSearch');
+        Route::put('/updateWebshopClient', 'updateWebshopClient')->name('updateWebshopClient');
+        Route::put('/pickupPackage', 'pickupPackage')->name('pickupPackage');
     });
 });
 
