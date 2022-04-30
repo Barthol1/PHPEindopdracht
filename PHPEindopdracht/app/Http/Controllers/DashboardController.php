@@ -51,7 +51,6 @@ class DashboardController extends Controller
         if($request->Status!="") {
             $allpackages->where('Status', $request->Status);
         }
-
         if($request->Sorting!="") {
             $allpackages->orderBy('name', 'desc');
         }
