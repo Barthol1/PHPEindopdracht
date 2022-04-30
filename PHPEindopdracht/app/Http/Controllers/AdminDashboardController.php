@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\enum\PackageSorting;
 use App\enum\PackageStatus;
+use MeiliSearch\Endpoints\Indexes;
 
 class AdminDashboardController extends Controller
 {
@@ -33,9 +34,9 @@ class AdminDashboardController extends Controller
         }
         else if($user->can("lezen")) {
             $packages = Package::where('transporters_id', null)
-            ->where('status', 'Aangemeld')
+            ->where('status', PackageStatus::AANGEMELD)
             ->orWhere('transporters_id', Auth::user()->transporters_id)
-            ->where('status', 'Onderweg');
+            ->where('status', PackageStatus::VERZONDEN);
         }
 
         if($request->Status!="") {
@@ -86,22 +87,26 @@ class AdminDashboardController extends Controller
             $packages = Package::search($request->search);
         }
         else if($user->can("lezen")) {
+            $queryPackagesAangemeld = Package::search($request->search)
+            ->where('transporters_id', null)
+            ->where('status', PackageStatus::AANGEMELD);
 
+            $queryPackagesOnderweg = Package::search($request->search)
+            ->where('transporters_id', Auth::user()->transporters_id)
+            ->where('status', PackageStatus::VERZONDEN);
 
-            $packages = Package::search($request->search);
-
-            // $packages->filter(function ($model, $key) {
-
-            //     return $model->unsearchable();
-
-            // });
-
-            // $packages = where(function($query) {
-                // $packages->where('transporters_id', null)
-                // ->where('status', 'Aangemeld')
-                // ->orWhere('transporters_id', Auth::user()->transporters_id)
-                // ->where('status', 'Onderweg');
-            // });
+            if($request->filled('search') && count($queryPackagesAangemeld->get()) > 0) {
+                $packages = $queryPackagesAangemeld;
+            }
+            else if($request->filled('search') && count($queryPackagesOnderweg->get()) > 0) {
+                $packages = $queryPackagesOnderweg;
+            }
+            else {
+                $packages = Package::where('transporters_id', null)
+                ->where('status', PackageStatus::AANGEMELD)
+                ->orWhere('transporters_id', Auth::user()->transporters_id)
+                ->where('status', PackageStatus::VERZONDEN);
+            }
         }
 
         if($request->Status!="") {
@@ -115,9 +120,13 @@ class AdminDashboardController extends Controller
         $status = PackageStatus::cases();
         $sorting = PackageSorting::cases();
 
-        // $packages = $packages->paginate(8);
+        // $packages->filter(function ($value, $key) {
+        //     return $value['status'] == 'onderweg';
+        // });
 
-        return view('admindashboard.index', compact('packages'));
+        $packages = $packages->paginate(8);
+
+        return view('admindashboard.index', compact('packages', 'status', 'sorting'));
     }
 
     public function webshopstore(Request $request)
