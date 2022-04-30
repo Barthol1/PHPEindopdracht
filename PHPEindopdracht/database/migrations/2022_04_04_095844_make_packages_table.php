@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('packages', function (Blueprint $table) {
             $table->id();
-            $table->integer('name')->unique();
+            $table->string('name')->unique();
             $table->string('status');
+            $table->string('sender_name');
             $table->string('sender_adres');
             $table->string('sender_city');
             $table->string('sender_postalcode');
