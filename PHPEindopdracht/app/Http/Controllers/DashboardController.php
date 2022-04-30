@@ -70,7 +70,7 @@ class DashboardController extends Controller
     public function updatePackage(Request $request, $id)
     {
         Package::find($id)->update($request->all());
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function importCSV(Request $request) {
@@ -78,19 +78,18 @@ class DashboardController extends Controller
             Excel::import(new PackageImport, request()->file("csvfile"));
             return redirect()->back()->with('success','Data Geimporteerd');
         }
-        else {
-            return redirect()->back()->withErrors(['msg' => 'Geen bestand geselecteerd']);
-        }
+
+        return redirect()->back()->withErrors(['msg' => 'Geen bestand geselecteerd']);
     }
 
     public function search(Request $request) {
-        $packages = Package::select();
+        $packages = Package::where('users_id', Auth::user()->id);
 
         if($request->filled('search')) {
-            $packages = Package::search($request->search);
+            $packages = Package::search($request->search)->where('users_id', Auth::user()->id);
         }
 
-        $packages = $packages->where('users_id', Auth::user()->id)->paginate(8);
+        $packages = $packages->paginate(8);
 
         return view('dashboard.index', compact('packages'));
     }

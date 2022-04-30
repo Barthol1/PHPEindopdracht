@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\enum\PackageSorting;
 use App\enum\PackageStatus;
-use MeiliSearch\Endpoints\Indexes;
 
 class AdminDashboardController extends Controller
 {
@@ -27,7 +26,7 @@ class AdminDashboardController extends Controller
         $clients = null;
         $webshops = null;
 
-        if($user->getRoleNames() != null && $user->can("schrijven")) {
+        if(!is_null($user->getRoleNames()) && $user->can("schrijven")) {
             $webshops = Webshop::all();
             $packages = Package::select();
             $clients = User::doesntHave('roles')->orderBy('name', 'asc')->where('transporters_id', null)->get();
@@ -64,6 +63,7 @@ class AdminDashboardController extends Controller
         $data = compact('package');
         view()->share('package', $data);
         $pdf = PDF::loadView('pdfs.Label', $data);
+
         return $pdf->download($package->first()->name.'.pdf');
     }
 
@@ -76,6 +76,7 @@ class AdminDashboardController extends Controller
         $data = compact('package');
         view()->share('package', $data);
         $pdf = PDF::loadView('pdfs.Label', $data);
+
         return $pdf->download($package->first()->name.'.pdf');
     }
 
@@ -83,10 +84,19 @@ class AdminDashboardController extends Controller
         $user = Auth::user();
         $packages = null;
 
-        if($request->filled('search') && $user->getRoleNames() != null && $user->can("schrijven")) {
-            $packages = Package::search($request->search);
+        if(!is_null($user->getRoleNames()) != null && $user->can("schrijven")) {
+            $packages = Package::select();
+
+            if($request->filled('search')) {
+                $packages = Package::search($request->search);
+            }
         }
         else if($user->can("lezen")) {
+            $packages = Package::where('transporters_id', null)
+            ->where('status', PackageStatus::AANGEMELD)
+            ->orWhere('transporters_id', Auth::user()->transporters_id)
+            ->where('status', PackageStatus::VERZONDEN);
+
             $queryPackagesAangemeld = Package::search($request->search)
             ->where('transporters_id', null)
             ->where('status', PackageStatus::AANGEMELD);
@@ -95,17 +105,11 @@ class AdminDashboardController extends Controller
             ->where('transporters_id', Auth::user()->transporters_id)
             ->where('status', PackageStatus::VERZONDEN);
 
-            if($request->filled('search') && count($queryPackagesAangemeld->get()) > 0) {
+            if($request->filled('search') && empty(count($queryPackagesAangemeld->get()))) {
                 $packages = $queryPackagesAangemeld;
             }
-            else if($request->filled('search') && count($queryPackagesOnderweg->get()) > 0) {
+            else if($request->filled('search') && empty(count($queryPackagesOnderweg->get()))) {
                 $packages = $queryPackagesOnderweg;
-            }
-            else {
-                $packages = Package::where('transporters_id', null)
-                ->where('status', PackageStatus::AANGEMELD)
-                ->orWhere('transporters_id', Auth::user()->transporters_id)
-                ->where('status', PackageStatus::VERZONDEN);
             }
         }
 
@@ -119,10 +123,6 @@ class AdminDashboardController extends Controller
 
         $status = PackageStatus::cases();
         $sorting = PackageSorting::cases();
-
-        // $packages->filter(function ($value, $key) {
-        //     return $value['status'] == 'onderweg';
-        // });
 
         $packages = $packages->paginate(8);
 
@@ -207,7 +207,7 @@ class AdminDashboardController extends Controller
                 $package = Package::find($selected);
                 $package->transporters_id = Auth::user()->transporters_id;
                 $package->pick_up_time = date($request->date . ' ' . $request->time);
-                $package->status = "Onderweg";
+                $package->status = PackageStatus::VERZONDEN;
                 $package->save();
             }
         }
