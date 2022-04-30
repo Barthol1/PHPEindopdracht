@@ -33,7 +33,7 @@ class PackageImport implements ToModel, WithStartRow, WithCustomCsvSettings
         error_log($row[0]);
         return new package([
             'name' => rand(10000000, 999999999),
-            'receiver_name' => $row[0],
+            'sender_name' => $row[0],
             'status' => $row[1],
             'sender_adres' => $row[2],
             'sender_city' => $row[3],
@@ -41,6 +41,7 @@ class PackageImport implements ToModel, WithStartRow, WithCustomCsvSettings
             'receiver_adres' => $row[5],
             'receiver_city' => $row[6],
             'receiver_postalcode' => $row[7],
+            'receiver_name' => $row[8],
             'users_id' => auth()->user()->id
         ]);
     }
