@@ -88,6 +88,7 @@
                                     <p>Stad: {{$p->receiver_city}}</p>
                                     <p>Postcode: {{$p->receiver_postalcode}}</p>
                                 </div>
+                                @if($p->status != "Verzonden")
                                 <div class="flex justify-center">
                                     <form action="{{ route('packages.destroy', $p->id) }}" method="post">
                                     @csrf
@@ -98,6 +99,7 @@
                                     </form>
                                     <a href="{{ route('editPackage', $p->id) }}" class="btn btn-primary">Aanpassen</a>
                                 </div>
+                                @endif
                                 @if($p->status == "Bezorgd")
                                     <form action="{{route('addreview', $p->id)}}">
                                         <div class="row mt-3">
