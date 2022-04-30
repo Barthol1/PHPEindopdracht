@@ -5,7 +5,7 @@ namespace Tests\Browser\Pages;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page;
 
-class PackageOverview extends Page
+class Login extends Page
 {
     /**
      * Get the URL for the page.
@@ -14,7 +14,7 @@ class PackageOverview extends Page
      */
     public function url()
     {
-        return '/dashboard';
+        return '/login';
     }
 
     /**
@@ -36,8 +36,8 @@ class PackageOverview extends Page
     public function elements()
     {
         return [
-            '@card' => 'div > main > div > div > div > div > div:nth-child(3)',
-            '@paginator' => 'div > main > div > div > div > div > nav'
+            '@loginbutton' => 'div > div > div.w-full.sm\:max-w-md.mt-6.px-6.py-4.bg-white.shadow-md.overflow-hidden.sm\:rounded-lg > form > div.flex.items-center.justify-end.mt-4 > button',
+            '@registerbutton' => 'div > div > div.w-full.sm\:max-w-md.mt-6.px-6.py-4.bg-white.shadow-md.overflow-hidden.sm\:rounded-lg > form > div.flex.items-center.justify-end.mt-4 > a'
         ];
     }
 }

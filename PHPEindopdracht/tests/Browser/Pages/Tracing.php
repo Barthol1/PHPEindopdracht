@@ -27,18 +27,4 @@ class Tracing extends Page
     {
         $browser->assertPathIs($this->url());
     }
-
-    /**
-     * Get the element shortcuts for the page.
-     *
-     * @return array
-     */
-    public function elements()
-    {
-        return [
-            '@loginbutton' => '#loginbutton',
-            '@package' => '#searchpackagebutton',
-            '@packagenumber' => '#packagelabelinput'
-        ];
-    }
 }

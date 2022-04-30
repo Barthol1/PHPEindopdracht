@@ -10,20 +10,28 @@ use Laravel\Dusk\Browser;
 use Tests\Browser\Pages\PackageOverview;
 use Tests\DuskTestCase;
 
-class PackageOverviewTests extends DuskTestCase
+class PackageOverviewTest extends DuskTestCase
 {
     /**
      * A Dusk test example.
      *
      * @return void
      */
+    public function testPackageOverviewWorks() {
+        $this->browse(function (Browser $browser) {
+            $browser->loginAs(User::find(1))
+                    ->visit(new PackageOverview)
+                    ->assertSee('Dashboard');
+        });
+    }
+    
     public function testFileUpload()
     {
         $this->browse(function (Browser $browser) {
             $browser->loginAs(User::find(1))
                     ->visit(new PackageOverview)
-                    ->attach('@csvupload', storage_path('app/public/CSVImport2.csv'))
-                    ->clickAndWaitForReload('@csvsubmit')
+                    ->attach('#csvupload', storage_path('app/public/CSVImport2.csv'))
+                    ->clickAndWaitForReload('#csvsubmit')
                     ->assertSee('Data Geimporteerd');
         });
     }
@@ -34,8 +42,8 @@ class PackageOverviewTests extends DuskTestCase
             $browser->loginAs(User::find(1))
                     ->visit(new PackageOverview)
                     ->select('Status', 'Aangemeld')
-                    ->clickAndWaitForReload('@sortinbutton')
-                    ->assertDontSeeIn('div > main > div > div > div > div > div:nth-child(3)', 'Afgeleverd');
+                    ->clickAndWaitForReload('#sortingbutton')
+                    ->assertDontSeeIn('@card', 'Afgeleverd');
         });
     }
 
@@ -45,8 +53,8 @@ class PackageOverviewTests extends DuskTestCase
             $browser->loginAs(User::find(1))
                     ->visit(new PackageOverview)
                     ->select('Sorting', 'name')
-                    ->clickAndWaitForReload('@sortinbutton')
-                    ->assertSeeIn('div > main > div > div > div > div > div:nth-child(3)', $package->name);
+                    ->clickAndWaitForReload('#sortingbutton')
+                    ->assertSeeIn('@card', $package->name);
         });
     }
     public function testPagination() {
@@ -54,7 +62,7 @@ class PackageOverviewTests extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->loginAs(User::find(1))
                     ->visit(new PackageOverview)
-                    ->assertPresent('div > main > div > div > div > div > nav');
+                    ->assertPresent('@paginator');
         });
     }
 }

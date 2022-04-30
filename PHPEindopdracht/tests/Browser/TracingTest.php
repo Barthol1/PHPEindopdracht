@@ -16,11 +16,18 @@ class TracingTest extends DuskTestCase
      *
      * @return void
      */
+    public function testTracingPageWorks() {
+        $this->browse(function (Browser $browser) {
+            $browser->visit(new Tracing)
+                    ->assertSee('Voer uw pakketcode in');
+        });
+    }
+
     public function testLoginButton()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit(new Tracing)
-                    ->click('@loginbutton')
+                    ->click('#loginbutton')
                     ->assertSee('Packr');
         });
     }
@@ -29,8 +36,8 @@ class TracingTest extends DuskTestCase
         $packagename = $package->name;
         $this->browse(function (Browser $browser) use ($packagename) {
             $browser->visit(new Tracing)
-                    ->type('@packagenumber', $packagename)
-                    ->clickAndWaitForReload('@package')
+                    ->type('#packagelabelinput', $packagename)
+                    ->clickAndWaitForReload('#searchpackagebutton')
                     ->assertSee($packagename);
         });
     }
