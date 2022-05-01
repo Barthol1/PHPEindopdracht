@@ -35,7 +35,7 @@ class AdminDashboardController extends Controller
             $packages = Package::where('transporters_id', null)
             ->where('status', PackageStatus::AANGEMELD)
             ->orWhere('transporters_id', Auth::user()->transporters_id)
-            ->where('status', PackageStatus::VERZONDEN);
+            ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM]);
         }
 
         if($request->Status!="") {
@@ -95,21 +95,21 @@ class AdminDashboardController extends Controller
             $packages = Package::where('transporters_id', null)
             ->where('status', PackageStatus::AANGEMELD)
             ->orWhere('transporters_id', Auth::user()->transporters_id)
-            ->where('status', PackageStatus::VERZONDEN);
+            ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM]);
 
-            $queryPackagesAangemeld = Package::search($request->search)
+            $packagesAangemeld = Package::search($request->search)
             ->where('transporters_id', null)
             ->where('status', PackageStatus::AANGEMELD);
 
-            $queryPackagesOnderweg = Package::search($request->search)
+            $packagesTransporter = Package::search($request->search)
             ->where('transporters_id', Auth::user()->transporters_id)
-            ->where('status', PackageStatus::VERZONDEN);
+            ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM]);
 
-            if($request->filled('search') && empty(count($queryPackagesAangemeld->get()))) {
-                $packages = $queryPackagesAangemeld;
+            if($request->filled('search') && empty(count($packagesAangemeld->get()))) {
+                $packages = $packagesAangemeld;
             }
-            else if($request->filled('search') && empty(count($queryPackagesOnderweg->get()))) {
-                $packages = $queryPackagesOnderweg;
+            else if($request->filled('search') && empty(count($packagesTransporter->get()))) {
+                $packages = $packagesTransporter;
             }
         }
 
@@ -207,7 +207,7 @@ class AdminDashboardController extends Controller
                 $package = Package::find($selected);
                 $package->transporters_id = Auth::user()->transporters_id;
                 $package->pick_up_time = date($request->date . ' ' . $request->time);
-                $package->status = PackageStatus::VERZONDEN;
+                $package->status = PackageStatus::SORTEERCENTRUM;
                 $package->save();
             }
         }

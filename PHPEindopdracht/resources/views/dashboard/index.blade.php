@@ -64,7 +64,7 @@
                         <div class="input-group mb-3">
                             <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
                             <a class="btn btn-primary">
-                                <button type="submit" id="button-addon2">Search</button>
+                                <button type="submit" id="button-addon2">Zoeken</button>
                             </a>
                         </div>
                     </form>
@@ -88,7 +88,7 @@
                                     <p>Stad: {{$p->receiver_city}}</p>
                                     <p>Postcode: {{$p->receiver_postalcode}}</p>
                                 </div>
-                                @if($p->status != "Verzonden")
+                                @if($p->status == "aangemeld")
                                 <div class="flex justify-center">
                                     <form action="{{ route('packages.destroy', $p->id) }}" method="post">
                                     @csrf
@@ -100,7 +100,7 @@
                                     <a href="{{ route('editPackage', $p->id) }}" class="btn btn-primary">Aanpassen</a>
                                 </div>
                                 @endif
-                                @if($p->status == "Bezorgd")
+                                @if($p->status == "afgeleverd")
                                     <form action="{{route('addreview', $p->id)}}">
                                         <div class="row mt-3">
                                             <div class="col-md-3">
@@ -127,7 +127,8 @@
             </div>
         </div>
     </div>
-
+    @unlessrole('pakket inpakker')
+    @if($user->can('schrijven') || is_null($user->transporters_id))
     <div class="flex justify-center">
             <form action="{{ route('packages.store') }}" method="post">
             @csrf
@@ -141,8 +142,6 @@
                         @else
                         <div class="flex flex-col">
                             <p class="font-semibold uppercase">Verzender</p>
-                            <label for="name">Naam</label>
-                            <input type="text" name="name">
 
                             <label for="sender_adres">Adres</label>
                             <input type="text" name="sender_adres">
@@ -174,4 +173,6 @@
                 </div>
             </form>
         </div>
+        @endif
+        @endunlessrole
 </x-app-layout>

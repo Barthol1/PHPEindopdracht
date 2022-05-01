@@ -22,8 +22,14 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        $client = User::where('users.id', Auth::user()->id)->first();
-        $packages = Package::where('users_id', Auth::user()->id);
+        $user = Auth::user();
+
+        $client = User::where('users.id', $user->id)->first();
+        $packages = Package::where('users_id', $user->id);
+
+        if($user->hasrole("pakket inpakker")) {
+            $packages = Package::where('status', PackageStatus::SORTEERCENTRUM);
+        }
 
         if($request->Status!="") {
             $packages->where('Status', $request->Status);
@@ -37,7 +43,7 @@ class DashboardController extends Controller
 
         $packages = $packages->paginate(8);
 
-        return view('dashboard.index', compact('client', 'packages', 'status', 'sorting'));
+        return view('dashboard.index', compact('user', 'client', 'packages', 'status', 'sorting'));
     }
 
     public function addReview(Request $request,$id) {

@@ -42,7 +42,7 @@
                         <div class="input-group mb-3">
                             <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
                             <a class="btn btn-primary">
-                                <button type="submit" id="button-addon2">Search</button>
+                                <button type="submit" id="button-addon2">Zoeken</button>
                             </a>
                         </div>
                     </form>
@@ -72,8 +72,8 @@
                                     <p class="font-semibold">{{$p->status}}</p>
                                     @can("lezen")
                                         @unlessrole("pakket inpakker|administratief medewerker|superadmin")
-                                            @if($p->status == "Aangemeld")
-                                                <input type="checkbox" name="selectedPackage[]" value="{{ $p->id }}">
+                                            @if($p->status == "uitgeprint")
+                                                <input type="checkbox" name="selectedPackage[]" value="{{ $p->id }}" {{ (is_array(old('selectedPackage')) && in_array($p->id, old('selectedPackage'))) ? ' checked' : '' }}>
                                             @endif
                                         @endunlessrole
                                     @endcan
@@ -94,9 +94,11 @@
                                             <p>Stad: {{$p->receiver_city}}</p>
                                             <p>Postcode: {{$p->receiver_postalcode}}</p>
                                         </div>
-                                        <div class="d-flex flex-row align-items-start">
-                                            <a class="btn btn-primary mr-2" href="{{ route('getpdf', $p->id) }}">Download Label</a>
-                                        </div>
+                                        @if($p->status != "uitgeprint")
+                                            <div class="d-flex flex-row align-items-start">
+                                                <a class="btn btn-primary mr-2" href="{{ route('getpdf', $p->id) }}">Download Label</a>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

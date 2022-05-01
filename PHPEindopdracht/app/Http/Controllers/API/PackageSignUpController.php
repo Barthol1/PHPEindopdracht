@@ -23,25 +23,23 @@ class PackageSignUpController extends Controller
     {
         $webshop = Webshop::find($request->user()->webshops_id);
 
+        $arrayOfInts = array();
+        $count = 0;
+        while($count < 5) {
+            $value = rand(0,9);
+            array_push($arrayOfInts, $value);
+            $count++;
+        }
+
+        $request['name'] = implode('', $arrayOfInts);
+
         if(!is_null($webshop)) {
-            $arr =  array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
-            $count = 0;
-            $arrayOfInts = array();
-
-            while($count < 5) {
-                $value = array_rand($arr);
-                array_push($arrayOfInts, $value);
-                $count++;
-            }
-
-            $request['name'] = implode('', $arrayOfInts);
             $request['sender_adres'] = $webshop->adres;
             $request['sender_city'] = $webshop->place;
             $request['sender_postalcode'] = $webshop->postalcode;
         }
 
         $request->validate([
-            'name'=>'required',
             'sender_adres'=>'required',
             'sender_city'=>'required',
             'sender_postalcode'=>'required',
