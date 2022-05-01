@@ -28,9 +28,9 @@
                         @csrf
                         <div class="row">
                             <div class="col-md-4 offset-md-7">
-                                <input class="form-control" type="file" id="csvfile" name="csvfile" accept=".csv">
+                                <input id="csvupload" class="form-control" type="file" id="csvfile" name="csvfile" accept=".csv">
                             </div>
-                            <button type="submit" class="btn btn-link link-dark col-md-1">Upload</button>
+                            <button id="csvsubmit" type="submit" class="btn btn-link link-dark col-md-1">Upload</button>
                         </div>
                     </form>
                     <form action= " {{route('dashboard')}} ">
@@ -52,7 +52,7 @@
                                 </select>
                             </div>
                             <div class="col-md-1">
-                                <button class="btn btn-link link-dark" type="submit">Sorteren</button>
+                                <button id="sortingbutton" class="btn btn-link link-dark" type="submit">Sorteren</button>
                             </div>
                         </div>
                     </form>
@@ -84,7 +84,7 @@
                                             <option value="5">5</option>
                                         </select>
                                     </div>
-                                    <button class="btn button-primary col-md-1" type="submit">Submit</button>
+                                    <button id="reviewbutton" class="btn button-primary col-md-1" type="submit">Submit</button>
                                 </div>
                             </form>
                             @endif
