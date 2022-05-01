@@ -10,7 +10,7 @@
 <body>
     <div class="row">
         <div class="col-md-1 offset-md-11 mt-2">
-            <a href="{{Route('dashboard')}}" class="btn btn-primary">Log in</a>
+            <a id="loginbutton" href="{{Route('dashboard')}}" class="btn btn-primary">Log in</a>
         </div>
     </div>
     <form action="{{route('getpackage')}}" method="GET">
@@ -28,8 +28,8 @@
             </div>
             @endif
             <label for="code">Pakketcode</label>
-            <input type="text" class="form-control mt-3 mb-3" id="code" name="code">
-            <button type="submit" class="btn btn-primary">Zoek</button>
+            <input id="packagelabelinput" type="text" class="form-control mt-3 mb-3" id="code" name="code">
+            <button id="searchpackagebutton" type="submit" class="btn btn-primary">Zoek</button>
         </div>
         </div>
     </div>

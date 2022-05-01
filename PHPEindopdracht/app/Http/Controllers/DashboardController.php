@@ -28,7 +28,6 @@ class DashboardController extends Controller
         if($request->Status!="") {
             $packages->where('Status', $request->Status);
         }
-
         if($request->Sorting!="") {
             $packages->orderBy('name', 'desc');
         }
@@ -74,12 +73,18 @@ class DashboardController extends Controller
     }
 
     public function importCSV(Request $request) {
-        if($request->hasFile("csvfile")) {
-            Excel::import(new PackageImport, request()->file("csvfile"));
-            return redirect()->back()->with('success','Data Geimporteerd');
-        }
-
-        return redirect()->back()->withErrors(['msg' => 'Geen bestand geselecteerd']);
+        //try {
+            if($request->hasFile("csvfile")) {
+                Excel::import(new PackageImport, request()->file("csvfile"));
+                return redirect()->back()->with('success','Data Geimporteerd');
+            }
+            else {
+                return redirect()->back()->withErrors(['msg' => 'Geen bestand geselecteerd']);
+            }
+        //}
+        // catch(Throwable $e) {
+        //     return redirect()->back()->withErrors(['msg' => 'Er ging iets fout, check het bestand en probeer opnieuw']);
+        // }
     }
 
     public function search(Request $request) {
