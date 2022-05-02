@@ -62,10 +62,10 @@ class PackageSignUpController extends Controller
         $package->update($request->all());
 
         if($package) {
-            return ["result" => "deleted package " . $package->name];
+            return ["result" => "updated package " . $package->name];
         }
 
-        return response()->json(["result" => "failed to delete package"]);
+        return response()->json(["result" => "failed to update package"]);
     }
 
     public function destroy($id)

@@ -35,7 +35,7 @@ class AdminDashboardController extends Controller
             $packages = Package::where('transporters_id', null)
             ->where('status', PackageStatus::AANGEMELD)
             ->orWhere('transporters_id', Auth::user()->transporters_id)
-            ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM]);
+            ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM, PackageStatus::UITGEPRINT]);
         }
 
         if($request->Status!="") {
@@ -95,7 +95,7 @@ class AdminDashboardController extends Controller
             $packages = Package::where('transporters_id', null)
             ->where('status', PackageStatus::AANGEMELD)
             ->orWhere('transporters_id', Auth::user()->transporters_id)
-            ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM]);
+            ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM, PackageStatus::UITGEPRINT]);
 
             $packagesAangemeld = Package::search($request->search)
             ->where('transporters_id', null)
@@ -103,7 +103,7 @@ class AdminDashboardController extends Controller
 
             $packagesTransporter = Package::search($request->search)
             ->where('transporters_id', Auth::user()->transporters_id)
-            ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM]);
+            ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM, PackageStatus::UITGEPRINT]);
 
             if($request->filled('search') && empty(count($packagesAangemeld->get()))) {
                 $packages = $packagesAangemeld;

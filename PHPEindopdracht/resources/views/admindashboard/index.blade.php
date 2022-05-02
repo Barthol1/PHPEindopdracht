@@ -72,7 +72,7 @@
                                     <p class="font-semibold">{{$p->status}}</p>
                                     @can("lezen")
                                         @unlessrole("pakket inpakker|administratief medewerker|superadmin")
-                                            @if($p->status == "uitgeprint")
+                                            @if($p->status == "Uitgeprint")
                                                 <input type="checkbox" name="selectedPackage[]" value="{{ $p->id }}" {{ (is_array(old('selectedPackage')) && in_array($p->id, old('selectedPackage'))) ? ' checked' : '' }}>
                                             @endif
                                         @endunlessrole
@@ -94,7 +94,7 @@
                                             <p>Stad: {{$p->receiver_city}}</p>
                                             <p>Postcode: {{$p->receiver_postalcode}}</p>
                                         </div>
-                                        @if($p->status != "uitgeprint")
+                                        @if($p->status == "Aangemeld")
                                             <div class="d-flex flex-row align-items-start">
                                                 <a class="btn btn-primary mr-2" href="{{ route('getpdf', $p->id) }}">Download Label</a>
                                             </div>
