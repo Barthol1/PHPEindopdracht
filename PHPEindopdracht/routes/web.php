@@ -26,7 +26,7 @@ Route::controller(DashboardController::class)->group(function() {
 });
 
 Route::group(['middleware' => ['role_or_permission:superadmin|administratief medewerker|pakket inpakker|lezen|schrijven']], function() {
-    Route::resource('/admindashboard', AdminDashboardController::class)->middleware(['auth']);
+    Route::resource('/admindashboard', AdminDashboardController::class);
     Route::controller(AdminDashboardController::class)->group(function() {
         Route::get('/getpdf/{var1}', 'getPDF')->name('getpdf');
         Route::get('/allpdf', 'getAllPDF')->name('getallpdf');
