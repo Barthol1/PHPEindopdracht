@@ -9,6 +9,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <form action= " {{route('admindashboard.index')}} ">
+                        @csrf
                         <div class="row mb-2">
                             <div class="col-md-2">
                                 <a class="btn btn-primary" href="{{ route('getallpdf')}}">Maak Alle Labels</a>
@@ -39,6 +40,7 @@
                         </div>
                     </form>
                     <form action="{{ route('adminSearch') }}" method="GET" class="mb-5">
+                        @csrf
                         <div class="input-group mb-3">
                             <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
                             <a class="btn btn-primary">

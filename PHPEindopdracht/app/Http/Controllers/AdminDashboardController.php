@@ -33,7 +33,7 @@ class AdminDashboardController extends Controller
         }
         else if($user->can("lezen")) {
             $packages = Package::where('transporters_id', null)
-            ->where('status', PackageStatus::AANGEMELD)
+            ->whereIn('status', [PackageStatus::AANGEMELD, PackageStatus::UITGEPRINT])
             ->orWhere('transporters_id', Auth::user()->transporters_id)
             ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM, PackageStatus::UITGEPRINT]);
         }
@@ -105,10 +105,10 @@ class AdminDashboardController extends Controller
             ->where('transporters_id', Auth::user()->transporters_id)
             ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM, PackageStatus::UITGEPRINT]);
 
-            if($request->filled('search') && empty(count($packagesAangemeld->get()))) {
+            if($request->filled('search') && !empty(count($packagesAangemeld->get()))) {
                 $packages = $packagesAangemeld;
             }
-            else if($request->filled('search') && empty(count($packagesTransporter->get()))) {
+            else if($request->filled('search') && !empty(count($packagesTransporter->get()))) {
                 $packages = $packagesTransporter;
             }
         }

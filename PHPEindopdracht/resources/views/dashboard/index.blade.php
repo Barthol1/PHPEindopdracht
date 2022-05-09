@@ -34,6 +34,7 @@
                         </div>
                     </form>
                     <form action= " {{route('dashboard')}} ">
+                        @csrf
                         <div class="row mb-2">
                             <div class="col-md-2 offset-md-7">
                                 <select class="form-select" aria-label="Default select example" name="Status">
@@ -61,6 +62,7 @@
                         </div>
                     </form>
                     <form action="{{ route('dashboardSearch') }}" method="GET" class="mb-5">
+                        @csrf
                         <div class="input-group mb-3">
                             <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
                             <a class="btn btn-primary">
@@ -102,8 +104,9 @@
                                 @endif
                                 @if($p->status == "Afgeleverd")
                                     <form action="{{route('addreview', $p->id)}}">
-                                        <div class="row mt-3">
-                                            <div class="col-md-3">
+                                        @csrf
+                                        <div class="flex">
+                                            <div>
                                                 <select class="form-select" name="review" aria-label="review">
                                                     <option selected>Laat een review achter!</option>
                                                     <option value="1">1</option>
@@ -113,7 +116,7 @@
                                                     <option value="5">5</option>
                                                 </select>
                                             </div>
-                                            <button class="btn button-primary col-md-1" type="submit">Submit</button>
+                                            <button class="btn button-primary" type="submit">Submit</button>
                                         </div>
                                     </form>
                                 @endif

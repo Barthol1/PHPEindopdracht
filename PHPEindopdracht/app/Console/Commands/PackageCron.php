@@ -42,10 +42,5 @@ class PackageCron extends Command
             $p->status = PackageStatus::VERZONDEN;
             $p->save();
         });
-
-        // $client = new \GuzzleHttp\Client();
-        // $request = $client->get('https://127.0.0.1:8000/api/packages/status');
-        // $response = $request->getBody()->getContents();
-        // return json_decode($response, true);
     }
 }
