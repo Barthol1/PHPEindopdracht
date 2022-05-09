@@ -32,10 +32,13 @@ class AdminDashboardController extends Controller
             $clients = User::doesntHave('roles')->orderBy('name', 'asc')->where('transporters_id', null)->get();
         }
         else if($user->can("lezen")) {
-            $packages = Package::where('transporters_id', null)
-            ->whereIn('status', [PackageStatus::AANGEMELD, PackageStatus::UITGEPRINT])
-            ->orWhere('transporters_id', Auth::user()->transporters_id)
+            $packagesUser = Package::where('transporters_id', null)
+            ->whereIn('status', [PackageStatus::AANGEMELD, PackageStatus::UITGEPRINT]);
+
+            $packagesTransporter = Package::where('transporters_id', Auth::user()->transporters_id)
             ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM, PackageStatus::UITGEPRINT]);
+
+            $packages = $packagesUser->union($packagesTransporter);
         }
 
         if($request->Status!="") {
