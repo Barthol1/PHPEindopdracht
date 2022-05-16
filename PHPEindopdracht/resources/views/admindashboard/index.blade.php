@@ -71,7 +71,8 @@
                         @foreach($packages as $p)
                             <div class="card mb-2">
                                 <div class="card-header flex justify-between">
-                                    <p class="font-semibold">{{$p->status}}</p>
+                                <p>{{$p->name}}</p>
+                                <p class="font-semibold">{{$p->status}}</p>
                                     @can("lezen")
                                         @unlessrole("pakket inpakker|administratief medewerker|superadmin")
                                             @if($p->status == "Uitgeprint")
@@ -84,7 +85,7 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
                                             <p class="font-semibold">Verzender</p>
-                                            <p>Naam: {{$p->name}}</p>
+                                            <p>Naam: {{$p->sender_name}}</p>
                                             <p>Adres: {{$p->sender_adres}}</p>
                                             <p>Stad: {{$p->sender_city}}</p>
                                             <p>Postcode: {{$p->sender_postalcode}}</p>

@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Route;
 Route::resource('/dashboard', DashboardController::class)->middleware(['auth'])->name('index', 'dashboard');
 Route::controller(DashboardController::class)->group(function() {
     Route::get('/editpackage/{id}', 'editPackage')->name('editPackage');
-    Route::put('/updatePackage/{id}', 'updatePackage')->name('updatePackage');
     Route::get('/addreview/{id}', 'addReview')->name('addreview');
     Route::post('/import', 'importCSV')->name('importcsv');
     Route::get('/dashboardSearch', 'search')->name('dashboardSearch');

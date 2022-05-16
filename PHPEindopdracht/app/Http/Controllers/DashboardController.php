@@ -23,7 +23,6 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-
         $client = User::where('users.id', $user->id)->first();
         $packages = Package::where('users_id', $user->id);
 
@@ -58,23 +57,15 @@ class DashboardController extends Controller
 
     public function editPackage($id)
     {
-        $package = Package::where('users_id', Auth::user()->id)->find($id);
+        $user = Auth::user();
+        $package = Package::where('users_id', $user->id)->find($id);
 
-        if(is_null($package)) {
-            $packages = Package::orderBy('status')
-            ->orderBy('sender_city')
-            ->where('users_id', Auth::user()->id)
-            ->paginate(8);
+        if(!is_null($package)) {
+            $client = User::where('users.id', $user->id)->first();
 
-            return view('dashboard.index', compact('packages'));
+            return view('dashboard.editpackage', compact('user', 'client', 'package'));
         }
 
-        return view('dashboard.editpackage', compact('package'));
-    }
-
-    public function updatePackage(Request $request, $id)
-    {
-        Package::find($id)->update($request->all());
         return redirect('/dashboard');
     }
 
@@ -94,15 +85,19 @@ class DashboardController extends Controller
     }
 
     public function search(Request $request) {
-        $packages = Package::where('users_id', Auth::user()->id);
+        $user =  Auth::user();
+        $packages = Package::where('users_id', $user->id);
 
         if($request->filled('search')) {
-            $packages = Package::search($request->search)->where('users_id', Auth::user()->id);
+            $packages = Package::search($request->search)->where('users_id', $user->id);
+        }
+        else {
+            return redirect('/dashboard');
         }
 
         $packages = $packages->paginate(8);
 
-        return view('dashboard.index', compact('packages'));
+        return view('dashboard.index', compact('user', 'packages'));
     }
 
     public function create()

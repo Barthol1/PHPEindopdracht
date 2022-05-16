@@ -9,18 +9,30 @@
     @method("PUT")
     <div class="flex">
         <div class="flex flex-col">
-            <p class="uppercase font-semibold">Verzender</p>
-            <label for="name">Naam</label>
-            <input type="text" name="name" value="{{ $package->name }}">
+            <p class="font-semibold uppercase">Verzender</p>
+            @if(!empty($client->webshop))
+                <div>
+                    <p>Naam: {{$client->name}}</p>
+                    <p>Webshop: {{$client->webshop->name}}</p>
+                    <p>Adres: {{$client->webshop->adres}}</p>
+                    <p>Stad: {{$client->webshop->place}}</p>
+                    <p>Postcode: {{$client->webshop->postalcode}}</p>
+                </div>
+                @else
+                <div class="flex flex-col">
+                <label for="sender_name">Naam</label>
+                <input type="text" name="sender_name" value="{{ $package->sender_name }}">
 
-            <label for="sender_adres">Adres</label>
-            <input type="text" name="sender_adres" value="{{ $package->sender_adres }}">
+                <label for="sender_adres">Adres</label>
+                <input type="text" name="sender_adres" value="{{ $package->sender_adres }}">
 
-            <label for="sender_city">Stad</label>
-            <input type="text" name="sender_city" value="{{ $package->sender_city }}">
+                <label for="sender_city">Stad</label>
+                <input type="text" name="sender_city" value="{{ $package->sender_city }}">
 
-            <label for="sender_postalcode">Postcode</label>
-            <input type="text" name="sender_postalcode" value="{{ $package->sender_postalcode }}">
+                <label for="sender_postalcode">Postcode</label>
+                <input type="text" name="sender_postalcode" value="{{ $package->sender_postalcode }}">
+            </div>
+            @endif
         </div>
         <div class="flex flex-col ml-4">
             <p class="uppercase font-semibold">Ontvanger</p>

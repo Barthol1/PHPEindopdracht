@@ -72,13 +72,15 @@
                     </form>
                     @foreach($packages as $p)
                         <div class="card mb-2">
-                            <div class="card-header font-semibold">
-                                {{$p->status}}
+                            <div class="card-header font-semibold flex justify-between">
+                                <p>{{$p->name}}</p>
+                                <p>{{$p->status}}</p>
                             </div>
+
                             <div class="card-body flex justify-content-between align-items-center"">
                                 <div>
                                     <p class="font-semibold">Verzender</p>
-                                    <p>Naam: {{$p->name}}</p>
+                                    <p>Naam: {{$p->sender_name}}</p>
                                     <p>Adres: {{$p->sender_adres}}</p>
                                     <p>Stad: {{$p->sender_city}}</p>
                                     <p>Postcode: {{$p->sender_postalcode}}</p>
@@ -92,7 +94,7 @@
                                 </div>
                                 @if($p->status == "Aangemeld")
                                 <div class="flex justify-center">
-                                    <form action="{{ route('packages.destroy', $p->id) }}" method="post">
+                                    <form action="{{ route('destroyPackage', $p->id) }}" method="post">
                                     @csrf
                                     @method('Delete')
                                     <a class="btn btn-primary mr-2">
@@ -133,29 +135,35 @@
     @unlessrole('pakket inpakker')
     @if($user->can('schrijven') || is_null($user->transporters_id))
     <div class="flex justify-center">
-            <form action="{{ route('packages.store') }}" method="post">
+            <form action="{{ route('storePackage') }}" method="post">
             @csrf
                 <div class="flex flex-row">
-                    @if(!empty($client->webshop))
-                        <div>
-                            <p>Verzender</p>
-                            <p>Naam: {{$client->name}}</p>
-                            <p>Webshop: {{$client->webshop->name}}</p>
-                        </div>
-                        @else
-                        <div class="flex flex-col">
-                            <p class="font-semibold uppercase">Verzender</p>
+                    <div class="flex flex-col">
+                        <p class="font-semibold uppercase">Verzender</p>
+                        @if(!empty($client->webshop))
+                            <div>
+                                <p>Naam: {{$client->name}}</p>
+                                <p>Webshop: {{$client->webshop->name}}</p>
+                                <p>Adres: {{$client->webshop->adres}}</p>
+                                <p>Stad: {{$client->webshop->place}}</p>
+                                <p>Postcode: {{$client->webshop->postalcode}}</p>
+                            </div>
+                            @else
+                            <div class="flex flex-col">
+                                <label for="sender_name">Naam</label>
+                                <input type="text" name="sender_name">
 
-                            <label for="sender_adres">Adres</label>
-                            <input type="text" name="sender_adres">
+                                <label for="sender_adres">Adres</label>
+                                <input type="text" name="sender_adres">
 
-                            <label for="sender_city">Stad</label>
-                            <input type="text" name="sender_city">
+                                <label for="sender_city">Stad</label>
+                                <input type="text" name="sender_city">
 
-                            <label for="sender_postalcode">Postcode</label>
-                            <input type="text" name="sender_postalcode">
-                        </div>
-                    @endif
+                                <label for="sender_postalcode">Postcode</label>
+                                <input type="text" name="sender_postalcode">
+                            </div>
+                        @endif
+                    </div>
                     <div class="flex flex-col ml-4">
                         <p class="font-semibold uppercase">Ontvanger</p>
                         <label for="receiver_name">Naam</label>

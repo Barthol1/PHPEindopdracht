@@ -24,22 +24,22 @@ class PackageSignUpController extends Controller
         $webshop = Webshop::find($request->user()->webshops_id);
 
         $arrayOfInts = array();
-        $count = 0;
-        while($count < 5) {
+        for($i = 0; $i < 10; $i++) {
             $value = rand(0,9);
             array_push($arrayOfInts, $value);
-            $count++;
         }
 
         $request['name'] = implode('', $arrayOfInts);
 
         if(!is_null($webshop)) {
+            $request['sender_name'] = $webshop->name;
             $request['sender_adres'] = $webshop->adres;
             $request['sender_city'] = $webshop->place;
             $request['sender_postalcode'] = $webshop->postalcode;
         }
 
         $request->validate([
+            'sender_name'=>'required',
             'sender_adres'=>'required',
             'sender_city'=>'required',
             'sender_postalcode'=>'required',
@@ -53,16 +53,28 @@ class PackageSignUpController extends Controller
         $request['users_id'] = request()->user()->id;
 
         $package = Package::create($request->all());
+
         return response()->json(["result" => "package created " . $package->name]);
     }
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'sender_name'=>'required',
+            'sender_adres'=>'required',
+            'sender_city'=>'required',
+            'sender_postalcode'=>'required',
+            'receiver_name' => 'required',
+            'receiver_adres' => 'required',
+            'receiver_postalcode' => 'required',
+            'receiver_city' => 'required',
+        ]);
+
         $package = Package::find($id);
         $package->update($request->all());
 
         if($package) {
-            return ["result" => "updated package " . $package->name];
+            return response()->json(["result" => "updated package " . $package->name]);
         }
 
         return response()->json(["result" => "failed to update package"]);
@@ -74,7 +86,7 @@ class PackageSignUpController extends Controller
         $package::destroy($id);
 
         if($package) {
-            return ["result" => "deleted package " . $package->name];
+            return response()->json(["result" => "deleted package " . $package->name]);
         }
 
         return response()->json(["result" => "failed to delete package"]);

@@ -23,9 +23,9 @@ Route::middleware('auth:api')->get('/user', function(Request $request) {
 Route::group(['middleware' => ['auth:sanctum']], function() {
     Route::apiResource('/packages', PackageSignUpController::class)->only('index');
     Route::controller(PackageSignUpController::class)->prefix('packages')->group(function() {
-        Route::get('/get/{id}', 'get')->name('packages.get');
-        Route::post('/store', 'store')->name('packages.store');
-        Route::put('/{id}', 'update')->name('packages.update');
-        Route::delete('/{id}', 'destroy')->name('packages.destroy');
+        Route::get('/get/{id}', 'get')->name('getPackage');
+        Route::post('/store', 'store')->name('storePackage');
+        Route::put('/{id}', 'update')->name('updatePackage');
+        Route::delete('/{id}', 'destroy')->name('destroyPackage');
     });
 });
