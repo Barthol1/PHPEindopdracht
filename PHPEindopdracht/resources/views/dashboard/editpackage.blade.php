@@ -15,8 +15,8 @@
                     <p>Naam: {{$client->name}}</p>
                     <p>Webshop: {{$client->webshop->name}}</p>
                     <p>Adres: {{$client->webshop->adres}}</p>
-                    <p>Stad: {{$client->webshop->place}}</p>
                     <p>Postcode: {{$client->webshop->postalcode}}</p>
+                    <p>Stad: {{$client->webshop->place}}</p>
                 </div>
                 @else
                 <div class="flex flex-col">
@@ -26,11 +26,11 @@
                 <label for="sender_adres">Adres</label>
                 <input type="text" name="sender_adres" value="{{ $package->sender_adres }}">
 
-                <label for="sender_city">Stad</label>
-                <input type="text" name="sender_city" value="{{ $package->sender_city }}">
-
                 <label for="sender_postalcode">Postcode</label>
                 <input type="text" name="sender_postalcode" value="{{ $package->sender_postalcode }}">
+
+                <label for="sender_city">Stad</label>
+                <input type="text" name="sender_city" value="{{ $package->sender_city }}">
             </div>
             @endif
         </div>

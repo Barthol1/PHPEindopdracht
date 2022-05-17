@@ -87,15 +87,15 @@
                                             <p class="font-semibold">Verzender</p>
                                             <p>Naam: {{$p->sender_name}}</p>
                                             <p>Adres: {{$p->sender_adres}}</p>
-                                            <p>Stad: {{$p->sender_city}}</p>
                                             <p>Postcode: {{$p->sender_postalcode}}</p>
+                                            <p>Stad: {{$p->sender_city}}</p>
                                         </div>
                                         <div>
                                             <p class="font-semibold">Ontvanger</p>
                                             <p>Naam: {{$p->receiver_name}}</p>
                                             <p>Adres: {{$p->receiver_adres}}</p>
-                                            <p>Stad: {{$p->receiver_city}}</p>
                                             <p>Postcode: {{$p->receiver_postalcode}}</p>
+                                            <p>Stad: {{$p->receiver_city}}</p>
                                         </div>
                                         @if($p->status == "Aangemeld")
                                             <div class="d-flex flex-row align-items-start">

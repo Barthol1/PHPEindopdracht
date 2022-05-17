@@ -82,15 +82,15 @@
                                     <p class="font-semibold">Verzender</p>
                                     <p>Naam: {{$p->sender_name}}</p>
                                     <p>Adres: {{$p->sender_adres}}</p>
-                                    <p>Stad: {{$p->sender_city}}</p>
                                     <p>Postcode: {{$p->sender_postalcode}}</p>
+                                    <p>Stad: {{$p->sender_city}}</p>
                                 </div>
                                 <div>
                                     <p class="font-semibold">Ontvanger</p>
                                     <p>Naam: {{$p->receiver_name}}</p>
                                     <p>Adres: {{$p->receiver_adres}}</p>
-                                    <p>Stad: {{$p->receiver_city}}</p>
                                     <p>Postcode: {{$p->receiver_postalcode}}</p>
+                                    <p>Stad: {{$p->receiver_city}}</p>
                                 </div>
                                 @if($p->status == "Aangemeld")
                                 <div class="flex justify-center">
@@ -145,8 +145,8 @@
                                 <p>Naam: {{$client->name}}</p>
                                 <p>Webshop: {{$client->webshop->name}}</p>
                                 <p>Adres: {{$client->webshop->adres}}</p>
-                                <p>Stad: {{$client->webshop->place}}</p>
                                 <p>Postcode: {{$client->webshop->postalcode}}</p>
+                                <p>Stad: {{$client->webshop->place}}</p>
                             </div>
                             @else
                             <div class="flex flex-col">
@@ -156,11 +156,11 @@
                                 <label for="sender_adres">Adres</label>
                                 <input type="text" name="sender_adres">
 
-                                <label for="sender_city">Stad</label>
-                                <input type="text" name="sender_city">
-
                                 <label for="sender_postalcode">Postcode</label>
                                 <input type="text" name="sender_postalcode">
+
+                                <label for="sender_city">Stad</label>
+                                <input type="text" name="sender_city">
                             </div>
                         @endif
                     </div>
