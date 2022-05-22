@@ -12,7 +12,9 @@ class pickupDateTime implements Rule
      *
      * @return void
      */
-    public function __construct()
+    var $value;
+
+     public function __construct()
     {
 
     }
@@ -26,6 +28,8 @@ class pickupDateTime implements Rule
      */
     public function passes($attribute, $value)
     {
+        $this->value = $value;
+
         $check = (
             $value >= Carbon::now()->addDays(1)->toDateString()
             && Carbon::now()->timezone('Europe/Amsterdam')->toTimeString() <= Carbon::parse("15:00:00")->format("H:i:s")
@@ -42,13 +46,15 @@ class pickupDateTime implements Rule
      */
     public function message()
     {
-        return 'Write your own message...';
+        $message = null;
 
-        // if(Carbon::now()->timezone('Europe/Amsterdam')->toTimeString() > Carbon::parse("15:00:00")->format("H:i:s")) {
-        //     return $message += "plan voor de 2e dag";
-        // }
-        // else if($value != Carbon::now()->addDays(1)->toDateString()) {
-        //     return $message += "";
-        // }
+        if(Carbon::now()->timezone('Europe/Amsterdam')->toTimeString() > Carbon::parse("15:00:00")->format("H:i:s")) {
+            $message = "plan voor de 2e dag vanaf vandaag in";
+        }
+        else if($this->value < Carbon::now()->addDays(1)->toDateString()) {
+            $message = "plan voor de volgende dag of de dag erop in";
+        }
+
+        return $message;
     }
 }

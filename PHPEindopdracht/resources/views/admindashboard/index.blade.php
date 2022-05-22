@@ -56,8 +56,17 @@
                             <div class="flex flex-col align-items-end p-2" style="background: gray;">
                             <p class="h5">Kies een datum voor het ophalen de pakket(ten)</p>
                                 <div>
-                                    <input type="date" data-date="" data-date-format="DD/MM/YYYY" name="date" class="mb-2">
-                                    <input type="time" data-date="" data-date-format="HH:mm" name="time" class="mb-2">
+                                    <input type="date" data-date="" data-date-format="DD/MM/YYYY" name="date" class="mb-2" value="{{old('date')}}">
+                                    @error('date')
+                                        <div class="alert alert-danger"> {{ $message }} </div>
+                                    @enderror
+                                    <input type="time" data-date="" data-date-format="HH:mm" name="time" class="mb-2" value="{{old('time')}}">
+                                    @error('time')
+                                        <div class="alert alert-danger"> {{ $message }} </div>
+                                    @enderror
+                                    @error('selectedPackage')
+                                        <div class="alert alert-danger"> {{ $message }} </div>
+                                    @enderror
                                 </div>
                                 <div>
                                     <a class="btn btn-primary">

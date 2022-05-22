@@ -86,6 +86,8 @@ class AdminDashboardController extends Controller
     public function search(Request $request) {
         $user = Auth::user();
         $packages = null;
+        $clients = null;
+        $webshops = null;
 
         if(!is_null($user->getRoleNames()) != null && $user->can("schrijven")) {
             $webshops = Webshop::all();
@@ -203,6 +205,7 @@ class AdminDashboardController extends Controller
         $request->validate([
             'date' => ['required', new pickupDateTime],
             'time' => 'required',
+            'selectedPackage' => 'required',
         ]);
 
         $selectedPackages = $request->selectedPackage;
