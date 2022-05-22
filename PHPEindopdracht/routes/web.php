@@ -17,33 +17,25 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('/dashboard', DashboardController::class)->middleware(['auth'])->name('index', 'dashboard');
-Route::get('/addreview/{id}', [DashboardController::class, 'addReview'])->middleware(['auth'])->name('addreview');
-Route::post('/import', [DashboardController::class, 'importCSV'])->middleware(['auth'])->name('importcsv');
+Route::controller(DashboardController::class)->group(function() {
+    Route::get('/editpackage/{id}', 'editPackage')->name('editPackage');
+    Route::get('/addreview/{id}', 'addReview')->name('addreview');
+    Route::post('/import', 'importCSV')->name('importcsv');
+    Route::get('/dashboardSearch', 'search')->name('dashboardSearch');
+});
 
-Route::controller(AdminDashboardController::class)->group(function() {
-    Route::get('/getpdf/{var1}', 'getPDF')->name('getpdf');
-    Route::get('/allpdf', 'getAllPDF')->name('getallpdf');
+Route::group(['middleware' => ['role_or_permission:superadmin|administratief medewerker|pakket inpakker|lezen|schrijven']], function() {
+    Route::resource('/admindashboard', AdminDashboardController::class);
+    Route::controller(AdminDashboardController::class)->group(function() {
+        Route::get('/getpdf/{var1}', 'getPDF')->name('getpdf');
+        Route::get('/allpdf', 'getAllPDF')->name('getallpdf');
+        Route::get('/adminSearch', 'search')->name('adminSearch');
+        Route::put('/updateWebshopClient', 'updateWebshopClient')->name('updateWebshopClient');
+        Route::put('/pickupPackage', 'pickupPackage')->name('pickupPackage');
+    });
 });
 
 Route::resource('/', TracingController::class);
 Route::get('/getpackage', [TracingController::class, 'getPackage'])->name('getpackage');
-
-Route::resource('admindashboard', AdminDashboardController::class)->middleware(['auth']);
-
-Route::group(['middleware' => ['role:superadmin']], function() {
-
-});
-Route::group(['middleware' => ['role:administratief medewerker']], function() {
-
-});
-Route::group(['middleware' => ['role:pakket inpakker']], function() {
-
-});
-Route::group(['middleware' => ['role_or_permission:superadmin|schrijven']], function() {
-
-});
-Route::group(['middleware' => ['role_or_permission:superadmin|lezen']], function() {
-
-});
 
 require __DIR__.'/auth.php';

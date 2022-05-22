@@ -7,10 +7,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
+
+    protected $table = 'users';
+    // protected $id = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -18,11 +22,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'id',
         'name',
         'email',
         'password',
         'webshops_id',
+        'transporters_id',
+        'api_token',
     ];
 
     /**
@@ -43,4 +48,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function webshop(){
+        return $this->belongsTo(Webshop::class, 'webshops_id');
+    }
+
+    public function packages() {
+        return $this->hasMany(Package::class);
+    }
+
+    public function role() {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function transporter(){
+        return $this->belongsTo(Transporter::class);
+    }
 }

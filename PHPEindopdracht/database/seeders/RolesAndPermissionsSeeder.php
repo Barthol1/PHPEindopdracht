@@ -37,27 +37,54 @@ class RolesAndPermissionsSeeder extends Seeder
             'email' => 'superadmin@gmail.com',
             'password' => bcrypt('superadmin'),
         ]);
+        $user['api_token'] = $user->createToken('api_token')->plainTextToken;
         $user->assignRole($superadmin);
+        $user->save();
 
         $user = User::factory()->create([
             'name' => 'admin',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('admin'),
         ]);
+        $user['api_token'] = $user->createToken('api_token')->plainTextToken;
         $user->assignRole($admin);
+        $user->save();
 
         $user = User::factory()->create([
             'name' => 'pakket inpakker',
             'email' => 'pakketinpakker@gmail.com',
             'password' => bcrypt('pakketinpakker'),
         ]);
+        $user['api_token'] = $user->createToken('api_token')->plainTextToken;
         $user->assignRole($packagePacker);
+        $user->save();
 
         $user = User::factory()->create([
             'name' => 'Pieter Koekenbakker',
             'email' => 'pieter@koek.com',
             'password' => bcrypt('pieter'),
-            'webshops_id' => 1
+            'webshops_id' => 1,
         ]);
+        $user['api_token'] = $user->createToken('api_token')->plainTextToken;
+        $user->save();
+
+        $user = User::factory()->create([
+            'name' => 'DHL gebruiker 1',
+            'email' => 'dhl@gmail.com',
+            'password' => bcrypt('DHL'),
+            'transporters_id' => 1,
+        ]);
+        $user->givePermissionTo($read);
+        $user->save();
+
+        $user = User::factory()->create([
+            'name' => 'UPS gebruiker 1',
+            'email' => 'ups@gmail.com',
+            'password' => bcrypt('UPS'),
+            'transporters_id' => 2,
+        ]);
+        $user->givePermissionTo($read);
+        $user->save();
+
     }
 }

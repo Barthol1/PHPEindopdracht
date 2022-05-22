@@ -2,29 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use app\enum\status as EnumStatus;
-use App\Models\package;
+use App\Models\Package;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Digikraaft\ReviewRating\Models\Review;
+use Illuminate\Support\Facades\Auth;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\PackageImport;
-use Error;
-use PhpOffice\PhpSpreadsheet\Reader\Csv;
-use PhpOffice\PhpSpreadsheet\Writer\Csv as WriterCsv;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-use App\enum;
-use App\enum\Package_Status;
 use App\enum\PackageSorting;
 use App\enum\PackageStatus;
-use Dompdf\FrameDecorator\Table;
-use PHPUnit\Framework\isNull;
-use Throwable;
-
-use function PHPUnit\Framework\isNull;
 
 class DashboardController extends Controller
 {
@@ -35,29 +22,27 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        $webshopid = auth()->user()->webshops_id;
-        $userid = auth()->user()->id;
+        $user = Auth::user();
+        $client = User::where('users.id', $user->id)->first();
+        $packages = Package::where('users_id', $user->id);
 
-        $query = DB::table('packages');
-        if(!isNull($webshopid)) {
-            $allpackages = $query
-                ->join('users', 'packages.users_id', '=', 'users.id')
-                ->where('users.webshopid', '=', $webshopid);
+        if($user->hasrole("pakket inpakker")) {
+            $packages = Package::where('status', PackageStatus::SORTEERCENTRUM);
         }
-        else {
-            $allpackages = $query
-                ->where('packages.users_id', '=', $userid);
-        }
+
         if($request->Status!="") {
-            $allpackages->where('Status', $request->Status);
+            $packages->where('Status', $request->Status);
         }
         if($request->Sorting!="") {
-            $allpackages->orderBy('name', 'desc');
+            $packages->orderBy('name', 'desc');
         }
-        $allpackages = $allpackages->paginate(8);
+
         $status = PackageStatus::cases();
         $sorting = PackageSorting::cases();
-        return view('dashboard', compact('allpackages', 'status', 'sorting'));
+
+        $packages = $packages->paginate(8);
+
+        return view('dashboard.index', compact('user', 'client', 'packages', 'status', 'sorting'));
     }
 
     public function addReview(Request $request,$id) {
@@ -67,6 +52,20 @@ class DashboardController extends Controller
         $user = auth()->user();
         $package = package::find($id);
         $package->makeReview($user,$request->review, "Review");
+        return redirect('/dashboard');
+    }
+
+    public function editPackage($id)
+    {
+        $user = Auth::user();
+        $package = Package::where('users_id', $user->id)->find($id);
+
+        if(!is_null($package)) {
+            $client = User::where('users.id', $user->id)->first();
+
+            return view('dashboard.editpackage', compact('user', 'client', 'package'));
+        }
+
         return redirect('/dashboard');
     }
 
@@ -83,8 +82,24 @@ class DashboardController extends Controller
         // catch(Throwable $e) {
         //     return redirect()->back()->withErrors(['msg' => 'Er ging iets fout, check het bestand en probeer opnieuw']);
         // }
-        
     }
+
+    public function search(Request $request) {
+        $user =  Auth::user();
+        $packages = Package::where('users_id', $user->id);
+
+        if($request->filled('search')) {
+            $packages = Package::search($request->search)->where('users_id', $user->id);
+        }
+        else {
+            return redirect('/dashboard');
+        }
+
+        $packages = $packages->paginate(8);
+
+        return view('dashboard.index', compact('user', 'packages'));
+    }
+
     public function create()
     {
         //

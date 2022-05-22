@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Package;
 use App\Models\User;
-use App\Models\Role;
+use App\Models\Webshop;
+use App\Rules\pickupDateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -20,28 +21,40 @@ class AdminDashboardController extends Controller
      */
     public function index(Request $request)
     {
-        if(Auth::user()->id == Role::find(1)->id || Auth::user()->id == Role::find(2)->id || Auth::user()->id == Role::find(3)->id) {
-            $allpackages = Package::paginate(8);
+        $user = Auth::user();
+        $packages = null;
+        $clients = null;
+        $webshops = null;
+
+        if(!is_null($user->getRoleNames()) && $user->can("schrijven")) {
+            $webshops = Webshop::all();
+            $packages = Package::select();
+            $clients = User::doesntHave('roles')->orderBy('name', 'asc')->where('transporters_id', null)->get();
         }
+        else if($user->can("lezen")) {
+            $packagesUser = Package::where('transporters_id', null)
+            ->whereIn('status', [PackageStatus::AANGEMELD, PackageStatus::UITGEPRINT]);
 
-        $allpackages = Package::where(Auth::user()->webshops_id, '!=', null);
+            $packagesTransporter = Package::where('transporters_id', Auth::user()->transporters_id)
+            ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM, PackageStatus::UITGEPRINT]);
 
-        if($allpackages != null) {
-            $allpackages->paginate(8);
+            $packages = $packagesUser->union($packagesTransporter);
         }
 
         if($request->Status!="") {
-            $allpackages->where('Status', $request->Status);
+            $packages->where('Status', $request->Status);
         }
 
         if($request->Sorting!="") {
-            $allpackages->orderBy('name', 'desc');
+            $packages->orderBy('name', 'desc');
         }
-        $allpackages = $allpackages->paginate(8);
+
         $status = PackageStatus::cases();
         $sorting = PackageSorting::cases();
 
-        return view('admindashboard.index', compact('allpackages', 'status', 'sorting'));
+        $packages = $packages->paginate(8);
+
+        return view('admindashboard.index', compact('clients', 'packages', 'webshops', 'status', 'sorting'));
     }
 
     public function getPDF($id) {
@@ -53,6 +66,7 @@ class AdminDashboardController extends Controller
         $data = compact('package');
         view()->share('package', $data);
         $pdf = PDF::loadView('pdfs.Label', $data);
+
         return $pdf->download($package->first()->name.'.pdf');
     }
 
@@ -65,15 +79,67 @@ class AdminDashboardController extends Controller
         $data = compact('package');
         view()->share('package', $data);
         $pdf = PDF::loadView('pdfs.Label', $data);
+
         return $pdf->download($package->first()->name.'.pdf');
     }
 
-    // public function webshopstore(Request $request)
-    // {
-    //     //
-    // }
+    public function search(Request $request) {
+        $user = Auth::user();
+        $packages = null;
+        $clients = null;
+        $webshops = null;
 
+        if(!is_null($user->getRoleNames()) != null && $user->can("schrijven")) {
+            $webshops = Webshop::all();
+            $packages = Package::select();
+            $clients = User::doesntHave('roles')->orderBy('name', 'asc')->where('transporters_id', null)->get();
 
+            if($request->filled('search')) {
+                $packages = Package::search($request->search);
+            }
+        }
+        else if($user->can("lezen")) {
+            $packages = Package::where('transporters_id', null)
+            ->where('status', PackageStatus::AANGEMELD, PackageStatus::UITGEPRINT)
+            ->orWhere('transporters_id', Auth::user()->transporters_id)
+            ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM, PackageStatus::UITGEPRINT]);
+
+            $packagesAangemeld = Package::search($request->search)
+            ->where('transporters_id', null)
+            ->whereIn('status', [PackageStatus::AANGEMELD, PackageStatus::UITGEPRINT]);
+
+            $packagesTransporter = Package::search($request->search)
+            ->where('transporters_id', Auth::user()->transporters_id)
+            ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM, PackageStatus::UITGEPRINT]);
+
+            if($request->filled('search') && !empty(count($packagesAangemeld->get()))) {
+                $packages = $packagesAangemeld;
+            }
+            else if($request->filled('search') && !empty(count($packagesTransporter->get()))) {
+                $packages = $packagesTransporter;
+            }
+        }
+
+        if($request->Status!="") {
+            $packages->where('Status', $request->Status);
+        }
+
+        if($request->Sorting!="") {
+            $packages->orderBy('name', 'desc');
+        }
+
+        $status = PackageStatus::cases();
+        $sorting = PackageSorting::cases();
+
+        $packages = $packages->paginate(8);
+
+        return view('admindashboard.index', compact('clients', 'packages', 'webshops', 'status', 'sorting'));
+    }
+
+    public function webshopstore(Request $request)
+    {
+        //
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -93,16 +159,8 @@ class AdminDashboardController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name'=>'required',
-            'email'=>'required',
-            'password'=>'required',
-        ]);
-
-        $request['webshops_id'] = 1;
-
-        User::create($request->all());
-        return redirect('/admindashboard');
+        // User::create($request->all());
+        // return redirect('/admindashboard');
     }
 
     /**
@@ -134,10 +192,36 @@ class AdminDashboardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateWebshopClient(Request $request)
     {
-        //
+        $user = User::find($request->client);
+        $user->webshops_id = $request->webshop;
+        $user->save();
+
+        return redirect('/admindashboard');
     }
+
+    public function pickupPackage(Request $request) {
+        $request->validate([
+            'date' => ['required', new pickupDateTime],
+            'time' => 'required',
+            'selectedPackage' => 'required',
+        ]);
+
+        $selectedPackages = $request->selectedPackage;
+
+        if(!is_null($selectedPackages)) {
+            foreach ($selectedPackages as $selected) {
+                $package = Package::find($selected);
+                $package->transporters_id = Auth::user()->transporters_id;
+                $package->pick_up_time = date($request->date . ' ' . $request->time);
+                $package->status = PackageStatus::SORTEERCENTRUM;
+                $package->save();
+            }
+        }
+
+        return redirect('/admindashboard');
+ }
 
     /**
      * Remove the specified resource from storage.

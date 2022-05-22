@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\PackageSignUpController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,18 +16,16 @@ use App\Http\Controllers\API\PackageSignUpController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('/user', function(Request $request) {
     return $request->user();
 });
 
-Route::apiResource('admindashboard/package', PackageSignUpController::class);
-Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::delete('admindashboard/package/{id}', [PackageSignUpController::class, 'update']);
-    Route::put('admindashboard/package/{id}', [PackageSignUpController::class, 'destroy']);
+Route::group(['middleware' => ['auth:sanctum']], function() {
+    Route::apiResource('/packages', PackageSignUpController::class)->only('index');
+    Route::controller(PackageSignUpController::class)->prefix('packages')->group(function() {
+        Route::get('/get/{id}', 'get')->name('getPackage');
+        Route::post('/store', 'store')->name('storePackage');
+        Route::put('/{id}', 'update')->name('updatePackage');
+        Route::delete('/{id}', 'destroy')->name('destroyPackage');
+    });
 });
-// Route::apiResource('package', PackageSignUpController::class)->middleware('auth:api');
-// Route::delete('package/{id}', [PackageSignUpController::class, 'destroy']);
-
-// Route::middleware(['auth:api', 'superadmin'])->group(function() {
-//     // Route::get('/', PackageSignUpController::class);
-// });

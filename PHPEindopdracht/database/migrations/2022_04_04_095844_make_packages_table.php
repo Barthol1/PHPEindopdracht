@@ -25,7 +25,9 @@ return new class extends Migration
             $table->string('receiver_adres');
             $table->string('receiver_city');
             $table->string('receiver_postalcode');
+            $table->timestamp('pick_up_time')->nullable();
             $table->foreignId('users_id')->constrained();
+            $table->foreignId('transporters_id')->nullable()->constrained();
             $table->timestamps();
         });
     }
@@ -37,6 +39,6 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('packages');
     }
 };

@@ -15,11 +15,13 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Home') }}
                     </x-nav-link>
-                    @hasanyrole('superadmin|administratief medewerker')
+                    @can('lezen')
+                    @unlessrole('pakket inpakker')
                     <x-nav-link :href="route('admindashboard.index')" :active="request()->routeIs('admindashboard.index')">
                         {{ __('Admindashboard') }}
                     </x-nav-link>
-                    @endhasanyrole
+                    @endunless
+                    @endcan
                 </div>
             </div>
 
