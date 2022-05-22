@@ -88,7 +88,9 @@ class AdminDashboardController extends Controller
         $packages = null;
 
         if(!is_null($user->getRoleNames()) != null && $user->can("schrijven")) {
+            $webshops = Webshop::all();
             $packages = Package::select();
+            $clients = User::doesntHave('roles')->orderBy('name', 'asc')->where('transporters_id', null)->get();
 
             if($request->filled('search')) {
                 $packages = Package::search($request->search);
@@ -96,13 +98,13 @@ class AdminDashboardController extends Controller
         }
         else if($user->can("lezen")) {
             $packages = Package::where('transporters_id', null)
-            ->where('status', PackageStatus::AANGEMELD)
+            ->where('status', PackageStatus::AANGEMELD, PackageStatus::UITGEPRINT)
             ->orWhere('transporters_id', Auth::user()->transporters_id)
             ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM, PackageStatus::UITGEPRINT]);
 
             $packagesAangemeld = Package::search($request->search)
             ->where('transporters_id', null)
-            ->where('status', PackageStatus::AANGEMELD);
+            ->whereIn('status', [PackageStatus::AANGEMELD, PackageStatus::UITGEPRINT]);
 
             $packagesTransporter = Package::search($request->search)
             ->where('transporters_id', Auth::user()->transporters_id)
@@ -129,7 +131,7 @@ class AdminDashboardController extends Controller
 
         $packages = $packages->paginate(8);
 
-        return view('admindashboard.index', compact('packages', 'status', 'sorting'));
+        return view('admindashboard.index', compact('clients', 'packages', 'webshops', 'status', 'sorting'));
     }
 
     public function webshopstore(Request $request)

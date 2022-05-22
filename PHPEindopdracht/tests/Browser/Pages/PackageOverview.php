@@ -38,9 +38,10 @@ class PackageOverview extends Page
         return [
             '@card' => 'div > main > div > div > div > div > div:nth-child(3)',
             '@paginator' => 'div > main > div > div > div > div > nav',
-            '@formSignUpPackage' => 'main > div:nth-child(2) > form',
+            '@formSignUpPackage' => 'main > div:last-child > form',
             '@paginateToPackage' => 'main > div:first-child nav > div:nth-child(2) > div:nth-child(2) > span > a:nth-last-child(2)',
-            '@changePackage' => 'main > div:first-child > div > div > div > .card:last > .card-body > div:last > a input'
+            '@editPackage' => 'main > div:first-child > div > div > div > .card:nth-last-child(2) > .card-body > div:last-child > a',
+            '@removePackage' => 'main > div:first-child > div > div > div > .card:nth-last-child(2) > .card-body > div:last-child > form > a'
         ];
     }
 }

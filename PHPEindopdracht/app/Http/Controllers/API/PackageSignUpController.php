@@ -39,14 +39,20 @@ class PackageSignUpController extends Controller
         }
 
         $request->validate([
-            'sender_name'=>'required',
-            'sender_adres'=>'required',
-            'sender_city'=>'required',
-            'sender_postalcode'=>'required',
-            'receiver_name' => 'required',
-            'receiver_adres' => 'required',
-            'receiver_postalcode' => 'required',
-            'receiver_city' => 'required',
+            'sender_name' => 'required|max:255',
+            'sender_adres' => 'required|max:255',
+            'sender_city' => 'required|max:189',
+            'sender_postalcode' => array(
+                'required',
+                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[a-z]{2})?$)/u'
+            ),
+            'receiver_name' => 'required|max:255',
+            'receiver_adres' => 'required|max:255',
+            'receiver_postalcode' => array(
+                'required',
+                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[a-z]{2})?$)/u'
+            ),
+            'receiver_city' => 'required|max:189',
         ]);
 
         $request['status'] = "Aangemeld";
@@ -60,14 +66,20 @@ class PackageSignUpController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'sender_name'=>'required',
-            'sender_adres'=>'required',
-            'sender_city'=>'required',
-            'sender_postalcode'=>'required',
-            'receiver_name' => 'required',
-            'receiver_adres' => 'required',
-            'receiver_postalcode' => 'required',
-            'receiver_city' => 'required',
+            'sender_name' => 'required|max:255',
+            'sender_adres' => 'required|max:255',
+            'sender_city' => 'required|max:189',
+            'sender_postalcode' => array(
+                'required',
+                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[a-z]{2})?$)/u'
+            ),
+            'receiver_name' => 'required|max:255',
+            'receiver_adres' => 'required|max:255',
+            'receiver_postalcode' => array(
+                'required',
+                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[a-z]{2})?$)/u'
+            ),
+            'receiver_city' => 'required|max:189',
         ]);
 
         $package = Package::find($id);

@@ -117,6 +117,7 @@
     </div>
     @hasanyrole('superadmin|administratief medewerker')
     @can('schrijven')
+    @if($clients->count() > 0)
     <div class="flex justify-center">
         <form action="{{ route('updateWebshopClient') }}" method="post">
         @csrf
@@ -171,6 +172,7 @@
             </table>
         </div>
     </div>
+    @endif
     @endcan
     @endhasanyrole
 </x-app-layout>
