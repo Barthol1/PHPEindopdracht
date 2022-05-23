@@ -55,7 +55,7 @@
                     <form action="{{ route('dashboardSearch') }}" method="GET" class="mb-5">
                         @csrf
                         <div class="input-group mb-3">
-                            <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
+                            <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control" placeholder="Zoeken..." aria-label="Zoeken" aria-describedby="button-addon2">
                             <a class="btn btn-primary">
                                 <button type="submit" id="button-addon2">Zoeken</button>
                             </a>

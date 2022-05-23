@@ -86,6 +86,7 @@ class DashboardController extends Controller
 
     public function search(Request $request) {
         $user =  Auth::user();
+        $client = User::where('users.id', $user->id)->first();
         $packages = Package::where('users_id', $user->id);
 
         if($request->filled('search')) {
@@ -97,7 +98,7 @@ class DashboardController extends Controller
 
         $packages = $packages->paginate(8);
 
-        return view('dashboard.index', compact('user', 'packages'));
+        return view('dashboard.index', compact('user', 'client', 'packages'));
     }
 
     public function create()

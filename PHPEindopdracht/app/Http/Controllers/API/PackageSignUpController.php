@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\enum\PackageStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Package;
 use App\Models\Webshop;
@@ -23,14 +24,6 @@ class PackageSignUpController extends Controller
     {
         $webshop = Webshop::find($request->user()->webshops_id);
 
-        $arrayOfInts = array();
-        for($i = 0; $i < 10; $i++) {
-            $value = rand(0,9);
-            array_push($arrayOfInts, $value);
-        }
-
-        $request['name'] = implode('', $arrayOfInts);
-
         if(!is_null($webshop)) {
             $request['sender_name'] = $webshop->name;
             $request['sender_adres'] = $webshop->adres;
@@ -44,21 +37,40 @@ class PackageSignUpController extends Controller
             'sender_city' => 'required|max:189',
             'sender_postalcode' => array(
                 'required',
-                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[a-z]{2})?$)/u'
+                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[A-z]{2})?$)/u'
             ),
             'receiver_name' => 'required|max:255',
             'receiver_adres' => 'required|max:255',
             'receiver_postalcode' => array(
                 'required',
-                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[a-z]{2})?$)/u'
+                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[A-z]{2})?$)/u'
             ),
             'receiver_city' => 'required|max:189',
         ]);
+        $package = new Package();
 
-        $request['status'] = "Aangemeld";
-        $request['users_id'] = request()->user()->id;
+        $intsString = "";
 
-        $package = Package::create($request->all());
+        for($i = 0; $i < 10; $i++) {
+            $intsString .= strval(rand(0,9));
+        }
+
+        $package->name = $intsString;
+
+        $package->sender_name = $request['sender_name'];
+        $package->sender_adres = $request['sender_adres'];
+        $package->sender_city = $request['sender_city'];
+        $package->sender_postalcode = $request['sender_postalcode'];
+
+        $package->status = PackageStatus::AANGEMELD;
+        $package->users_id = request()->user()->id;
+
+        $package->receiver_name = $request['receiver_name'];
+        $package->receiver_adres = $request['receiver_adres'];
+        $package->receiver_city = $request['receiver_city'];
+        $package->receiver_postalcode = $request['receiver_postalcode'];
+
+        $package->save();
 
         return response()->json(["result" => "package created " . $package->name]);
     }
@@ -71,19 +83,19 @@ class PackageSignUpController extends Controller
             'sender_city' => 'required|max:189',
             'sender_postalcode' => array(
                 'required',
-                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[a-z]{2})?$)/u'
+                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[A-z]{2})?$)/u'
             ),
             'receiver_name' => 'required|max:255',
             'receiver_adres' => 'required|max:255',
             'receiver_postalcode' => array(
                 'required',
-                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[a-z]{2})?$)/u'
+                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[A-z]{2})?$)/u'
             ),
             'receiver_city' => 'required|max:189',
         ]);
 
         $package = Package::find($id);
-        $package->update($request->all());
+        $package->update();
 
         if($package) {
             return response()->json(["result" => "updated package " . $package->name]);
