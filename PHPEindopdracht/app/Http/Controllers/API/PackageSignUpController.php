@@ -15,9 +15,9 @@ class PackageSignUpController extends Controller
         return Package::where('users_id', request()->user()->id)->get();
     }
 
-    public function get($productnr)
+    public function get($packagenr)
     {
-        return Package::where('name', 'like', '%' . $productnr . '%')->where('users_id', request()->user()->id)->get();
+        return Package::where('name', 'like', '%' . $packagenr . '%')->where('users_id', request()->user()->id)->get();
     }
 
     public function store(Request $request)
@@ -47,6 +47,7 @@ class PackageSignUpController extends Controller
             ),
             'receiver_city' => 'required|max:189',
         ]);
+
         $package = new Package();
 
         $intsString = "";
@@ -60,7 +61,7 @@ class PackageSignUpController extends Controller
         $package->sender_name = $request['sender_name'];
         $package->sender_adres = $request['sender_adres'];
         $package->sender_city = $request['sender_city'];
-        $package->sender_postalcode = $request['sender_postalcode'];
+        $package->sender_postalcode = strtoupper($request['sender_postalcode']);
 
         $package->status = PackageStatus::AANGEMELD;
         $package->users_id = request()->user()->id;
@@ -68,7 +69,7 @@ class PackageSignUpController extends Controller
         $package->receiver_name = $request['receiver_name'];
         $package->receiver_adres = $request['receiver_adres'];
         $package->receiver_city = $request['receiver_city'];
-        $package->receiver_postalcode = $request['receiver_postalcode'];
+        $package->receiver_postalcode = strtoupper($request['receiver_postalcode']);
 
         $package->save();
 
