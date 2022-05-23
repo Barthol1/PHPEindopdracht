@@ -140,7 +140,7 @@
                         <select name="client" aria-label="client" class="form-control">
                             <option value="0">-- selecteer klant --</option>
                             @foreach($clients as $c)
-                                <option value="{{$c->id}}">{{$c->name}} / {{$c->email}}</option>
+                                <option value="{{$c->id}}" {{ (old('client') == $c->id ? 'selected': '') }}>{{$c->name}} / {{$c->email}}</option>
                             @endforeach
                         </select>
                         @error('client')
@@ -153,7 +153,7 @@
                         <select name="webshop" aria-label="webshop" class="form-control">
                             <option value="0">-- selecteer webshop --</option>
                             @foreach($webshops as $w)
-                                <option value="{{$w->id}}">{{$w->name}}</option>
+                                <option value="{{$w->id}}" {{ (old('webshop') == $w->id ? 'selected': '') }}>{{$w->name}}</option>
                             @endforeach
                         </select>
                         @error('webshop')
