@@ -137,20 +137,28 @@
 
                     <label for="name" class="block uppercase">Klantnaam</label>
                     @if(!empty($clients))
-                    <select name="client" aria-label="client" class="form-control">
-                        @foreach($clients as $c)
-                            <option value="{{$c->id}}">{{$c->name}} / {{$c->email}}</option>
-                        @endforeach
-                    </select>
+                        <select name="client" aria-label="client" class="form-control">
+                            <option value="0">-- selecteer klant --</option>
+                            @foreach($clients as $c)
+                                <option value="{{$c->id}}">{{$c->name}} / {{$c->email}}</option>
+                            @endforeach
+                        </select>
+                        @error('client')
+                            <div class="alert alert-danger"> {{ $message }} </div>
+                        @enderror
                     @endif
 
                     <label for="name" class="block uppercase">Webshopnaam</label>
                     @if(!empty($webshops))
-                    <select name="webshop" aria-label="webshop" class="form-control">
-                        @foreach($webshops as $w)
-                            <option value="{{$w->id}}">{{$w->name}}</option>
-                        @endforeach
-                    </select>
+                        <select name="webshop" aria-label="webshop" class="form-control">
+                            <option value="0">-- selecteer webshop --</option>
+                            @foreach($webshops as $w)
+                                <option value="{{$w->id}}">{{$w->name}}</option>
+                            @endforeach
+                        </select>
+                        @error('webshop')
+                            <div class="alert alert-danger"> {{ $message }} </div>
+                        @enderror
                     @endif
                 </div>
             </div>

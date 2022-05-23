@@ -146,6 +146,11 @@ class AdminDashboardController extends Controller
      */
     public function updateWebshopClient(Request $request)
     {
+        $request->validate([
+            'client' => 'required|not_in:0',
+            'webshop' => 'required|not_in:0',
+        ]);
+
         $user = User::find($request->client);
         $user->webshops_id = $request->webshop;
         $user->save();
