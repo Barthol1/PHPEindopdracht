@@ -96,9 +96,19 @@ class DashboardController extends Controller
             return redirect('/dashboard');
         }
 
+        if($request->Status!="") {
+            $packages->where('Status', $request->Status);
+        }
+        if($request->Sorting!="") {
+            $packages->orderBy('name', 'desc');
+        }
+
+        $status = PackageStatus::cases();
+        $sorting = PackageSorting::cases();
+
         $packages = $packages->paginate(8);
 
-        return view('dashboard.index', compact('user', 'client', 'packages'));
+        return view('dashboard.index', compact('user', 'client', 'packages', 'status', 'sorting'));
     }
 
     public function create()

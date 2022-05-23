@@ -44,7 +44,6 @@ class AdminDashboardController extends Controller
         if($request->Status!="") {
             $packages->where('Status', $request->Status);
         }
-
         if($request->Sorting!="") {
             $packages->orderBy('name', 'desc');
         }
@@ -126,7 +125,6 @@ class AdminDashboardController extends Controller
         if($request->Status!="") {
             $packages->where('Status', $request->Status);
         }
-
         if($request->Sorting!="") {
             $packages->orderBy('name', 'desc');
         }
