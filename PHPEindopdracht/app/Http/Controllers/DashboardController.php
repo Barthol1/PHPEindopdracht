@@ -86,6 +86,7 @@ class DashboardController extends Controller
 
     public function search(Request $request) {
         $user =  Auth::user();
+        $client = User::where('users.id', $user->id)->first();
         $packages = Package::where('users_id', $user->id);
 
         if($request->filled('search')) {
@@ -95,69 +96,18 @@ class DashboardController extends Controller
             return redirect('/dashboard');
         }
 
+        if($request->Status!="") {
+            $packages->where('Status', $request->Status);
+        }
+        if($request->Sorting!="") {
+            $packages->orderBy('name', 'desc');
+        }
+
+        $status = PackageStatus::cases();
+        $sorting = PackageSorting::cases();
+
         $packages = $packages->paginate(8);
 
-        return view('dashboard.index', compact('user', 'packages'));
-    }
-
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return view('dashboard.index', compact('user', 'client', 'packages', 'status', 'sorting'));
     }
 }

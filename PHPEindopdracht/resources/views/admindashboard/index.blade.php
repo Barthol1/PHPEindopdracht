@@ -17,21 +17,17 @@
                             <div class="col-md-2 offset-md-5">
                                 <select class="form-select" aria-label="Default select example" name="Status">
                                     <option value="" selected>-- Status --</option>
-                                    @if(!empty($status))
-                                        @foreach($status as $s)
-                                            <option value="{{$s->value}}">{{$s->value}}</option>
-                                        @endforeach
-                                    @endif
+                                    @foreach($status as $s)
+                                        <option value="{{$s->value}}">{{$s->value}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <select class="form-select" aria-label="Default select example" name="Sorting">
                                     <option value="" selected>-- Filter --</option>
-                                    @if(!empty($sorting))
-                                        @foreach($sorting as $f)
-                                            <option value="{{$f->value}}">{{strtolower($f->name)}}</option>
-                                        @endforeach
-                                    @endif
+                                    @foreach($sorting as $f)
+                                        <option value="{{$f->value}}">{{strtolower($f->name)}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-md-1">
@@ -42,7 +38,7 @@
                     <form action="{{ route('adminSearch') }}" method="GET" class="mb-5">
                         @csrf
                         <div class="input-group mb-3">
-                            <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
+                            <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control" placeholder="Zoeken..." aria-label="Search" aria-describedby="button-addon2">
                             <a class="btn btn-primary">
                                 <button type="submit" id="button-addon2">Zoeken</button>
                             </a>
@@ -76,7 +72,6 @@
                             </div>
                         @endunlessrole
                     @endcan
-                    @if(!empty($packages))
                         @foreach($packages as $p)
                             <div class="card mb-2">
                                 <div class="card-header flex justify-between">
@@ -116,72 +111,77 @@
                             </div>
                         @endforeach
                     </form>
-                    @endif
-                    @if(!empty($packages))
-                        {{ $packages->links() }}
-                    @endif
+                    {{ $packages->links() }}
                 </div>
             </div>
         </div>
     </div>
     @hasanyrole('superadmin|administratief medewerker')
-    @can('schrijven')
-    @if($clients->count() > 0)
-    <div class="flex justify-center">
-        <form action="{{ route('updateWebshopClient') }}" method="post">
-        @csrf
-        @method('PUT')
-            <div class="flex flex-wrap -mx-3 mb-6">
-                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                    <p>Toevoegen klant aan webshop:</p>
+        @can('schrijven')
+            @if($clients->count() > 0)
+                <div class="flex justify-center">
+                    <form action="{{ route('updateWebshopClient') }}" method="post">
+                    @csrf
+                    @method('PUT')
+                        <div class="flex flex-wrap -mx-3 mb-6">
+                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                <p>Toevoegen klant aan webshop:</p>
 
-                    <label for="name" class="block uppercase">Klantnaam</label>
-                    @if(!empty($clients))
-                    <select name="client" aria-label="client" class="form-control">
-                        @foreach($clients as $c)
-                            <option value="{{$c->id}}">{{$c->name}} / {{$c->email}}</option>
-                        @endforeach
-                    </select>
-                    @endif
+                                <label for="name" class="block uppercase">Klantnaam</label>
+                                @if(!empty($clients))
+                                    <select name="client" aria-label="client" class="form-control">
+                                        <option value="0">-- selecteer klant --</option>
+                                        @foreach($clients as $c)
+                                            <option value="{{$c->id}}" {{ (old('client') == $c->id ? 'selected': '') }}>{{$c->name}} / {{$c->email}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('client')
+                                        <div class="alert alert-danger"> {{ $message }} </div>
+                                    @enderror
+                                @endif
 
-                    <label for="name" class="block uppercase">Webshopnaam</label>
-                    @if(!empty($webshops))
-                    <select name="webshop" aria-label="webshop" class="form-control">
-                        @foreach($webshops as $w)
-                            <option value="{{$w->id}}">{{$w->name}}</option>
-                        @endforeach
-                    </select>
-                    @endif
-                </div>
-            </div>
-            <div class="flex justify-center">
-                <button type="submit" class="btn btn-dark bg-dark mt-2">webshop account aanmaken / wijzigen</button>
-            </div>
-        </form>
-        <div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Klantnaam</th>
-                        <th>Webshop</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if(!empty($clients))
-                        @foreach ($clients as $u)
-                            @if(!empty($u->webshop))
+                                <label for="name" class="block uppercase">Webshopnaam</label>
+                                @if(!empty($webshops))
+                                    <select name="webshop" aria-label="webshop" class="form-control">
+                                        <option value="0">-- selecteer webshop --</option>
+                                        @foreach($webshops as $w)
+                                            <option value="{{$w->id}}" {{ (old('webshop') == $w->id ? 'selected': '') }}>{{$w->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('webshop')
+                                        <div class="alert alert-danger"> {{ $message }} </div>
+                                    @enderror
+                                @endif
+                            </div>
+                        </div>
+                        <div class="flex justify-center">
+                            <button type="submit" class="btn btn-dark bg-dark mt-2">webshop account aanmaken / wijzigen</button>
+                        </div>
+                    </form>
+                    <div>
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <td>{{$u->name}} / {{$u->email}}</td>
-                                    <td>{{$u->webshop->name}}</td>
+                                    <th>Klantnaam</th>
+                                    <th>Webshop</th>
                                 </tr>
-                            @endif
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
-        </div>
-    </div>
-    @endif
-    @endcan
+                            </thead>
+                            <tbody>
+                                @if(!empty($clients))
+                                    @foreach ($clients as $u)
+                                        @if(!empty($u->webshop))
+                                            <tr>
+                                                <td>{{$u->name}} / {{$u->email}}</td>
+                                                <td>{{$u->webshop->name}}</td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+        @endcan
     @endhasanyrole
 </x-app-layout>

@@ -30,21 +30,17 @@
                             <div class="col-md-2 offset-md-7">
                                 <select class="form-select" aria-label="Default select example" name="Status">
                                     <option value="" selected>-- Status --</option>
-                                    @if(!empty($status))
-                                        @foreach($status as $s)
-                                            <option value="{{$s->value}}">{{$s->value}}</option>
-                                        @endforeach
-                                    @endif
+                                    @foreach($status as $s)
+                                        <option value="{{$s->value}}">{{$s->value}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-md-2">
                                 <select class="form-select" aria-label="Default select example" name="Sorting">
                                     <option value="" selected>-- Filter --</option>
-                                    @if(!empty($sorting))
-                                        @foreach($sorting as $f)
-                                            <option value="{{$f->value}}">{{strtolower($f->name)}}</option>
-                                        @endforeach
-                                    @endif
+                                    @foreach($sorting as $f)
+                                        <option value="{{$f->value}}">{{strtolower($f->name)}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-md-1">
@@ -55,7 +51,7 @@
                     <form action="{{ route('dashboardSearch') }}" method="GET" class="mb-5">
                         @csrf
                         <div class="input-group mb-3">
-                            <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control" placeholder="Search..." aria-label="Search" aria-describedby="button-addon2">
+                            <input type="text" name="search" value="{{ request()->get('search') }}" class="form-control" placeholder="Zoeken..." aria-label="Zoeken" aria-describedby="button-addon2">
                             <a class="btn btn-primary">
                                 <button type="submit" id="button-addon2">Zoeken</button>
                             </a>
@@ -116,89 +112,87 @@
                             </div>
                         </div>
                     @endforeach
-                    @if(!empty($packages))
-                        {{ $packages->links() }}
-                    @endif
+                    {{ $packages->links() }}
                 </div>
             </div>
         </div>
     </div>
     @unlessrole('pakket inpakker')
-    @if($user->can('schrijven') || is_null($user->transporters_id))
-    <div class="flex justify-center">
-            <form action="{{ route('storePackage') }}" method="post">
-            @csrf
-                <div class="flex flex-row">
-                    <div class="flex flex-col">
-                        <p class="font-semibold uppercase">Verzender</p>
-                        @if(!empty($client->webshop))
-                            <div>
-                                <p>Naam: {{$client->name}}</p>
-                                <p>Webshop: {{$client->webshop->name}}</p>
-                                <p>Adres: {{$client->webshop->adres}}</p>
-                                <p>Postcode: {{$client->webshop->postalcode}}</p>
-                                <p>Stad: {{$client->webshop->place}}</p>
-                            </div>
-                            @else
+        @if($user->can('schrijven') || is_null($user->transporters_id))
+            <div class="flex justify-center">
+                    <form action="{{ route('storePackage') }}" method="post">
+                    @csrf
+                        <div class="flex flex-row">
                             <div class="flex flex-col">
-                                <label for="sender_name">Naam</label>
-                                <input type="text" name="sender_name" value="{{old('sender_name')}}">
-                                @error('sender_name')
+                                <p class="font-semibold uppercase">Verzender</p>
+                                @if(!empty($client->webshop))
+                                    <div>
+                                        <p>Naam: {{$client->name}}</p>
+                                        <p>Webshop: {{$client->webshop->name}}</p>
+                                        <p>Adres: {{$client->webshop->adres}}</p>
+                                        <p>Postcode: {{$client->webshop->postalcode}}</p>
+                                        <p>Stad: {{$client->webshop->place}}</p>
+                                    </div>
+                                    @else
+                                    <div class="flex flex-col">
+                                        <label for="sender_name">Naam</label>
+                                        <input type="text" name="sender_name" value="{{old('sender_name')}}">
+                                        @error('sender_name')
+                                            <div class="alert alert-danger"> {{ $message }} </div>
+                                        @enderror
+
+                                        <label for="sender_adres">Adres</label>
+                                        <input type="text" name="sender_adres" value="{{old('sender_adres')}}">
+                                        @error('sender_adres')
+                                            <div class="alert alert-danger"> {{ $message }} </div>
+                                        @enderror
+
+                                        <label for="sender_postalcode">Postcode</label>
+                                        <input type="text" name="sender_postalcode" value="{{old('sender_postalcode')}}">
+                                        @error('sender_postalcode')
+                                            <div class="alert alert-danger"> {{ $message }} </div>
+                                        @enderror
+
+                                        <label for="sender_city">Stad</label>
+                                        <input type="text" name="sender_city" value="{{old('sender_city')}}">
+                                        @error('sender_city')
+                                            <div class="alert alert-danger"> {{ $message }} </div>
+                                        @enderror
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="flex flex-col ml-4">
+                                <p class="font-semibold uppercase">Ontvanger</p>
+                                <label for="receiver_name">Naam</label>
+                                <input type="text" name="receiver_name" value="{{old('receiver_name')}}">
+                                @error('receiver_name')
                                     <div class="alert alert-danger"> {{ $message }} </div>
                                 @enderror
 
-                                <label for="sender_adres">Adres</label>
-                                <input type="text" name="sender_adres" value="{{old('sender_adres')}}">
-                                @error('sender_adres')
+                                <label for="receiver_adres">Adres</label>
+                                <input type="text" name="receiver_adres" value="{{old('receiver_adres')}}">
+                                @error('receiver_adres')
                                     <div class="alert alert-danger"> {{ $message }} </div>
                                 @enderror
 
-                                <label for="sender_postalcode">Postcode</label>
-                                <input type="text" name="sender_postalcode" value="{{old('sender_postalcode')}}">
-                                @error('sender_postalcode')
+                                <label for="receiver_postalcode">Postcode</label>
+                                <input type="text" name="receiver_postalcode" value="{{old('receiver_postalcode')}}">
+                                @error('receiver_postalcode')
                                     <div class="alert alert-danger"> {{ $message }} </div>
                                 @enderror
 
-                                <label for="sender_city">Stad</label>
-                                <input type="text" name="sender_city" value="{{old('sender_city')}}">
-                                @error('sender_city')
+                                <label for="receiver_city">Stad</label>
+                                <input type="text" name="receiver_city" value="{{old('receiver_city')}}">
+                                @error('receiver_city')
                                     <div class="alert alert-danger"> {{ $message }} </div>
                                 @enderror
                             </div>
-                        @endif
-                    </div>
-                    <div class="flex flex-col ml-4">
-                        <p class="font-semibold uppercase">Ontvanger</p>
-                        <label for="receiver_name">Naam</label>
-                        <input type="text" name="receiver_name" value="{{old('receiver_name')}}">
-                        @error('receiver_name')
-                            <div class="alert alert-danger"> {{ $message }} </div>
-                        @enderror
-
-                        <label for="receiver_adres">Adres</label>
-                        <input type="text" name="receiver_adres" value="{{old('receiver_adres')}}">
-                        @error('receiver_adres')
-                            <div class="alert alert-danger"> {{ $message }} </div>
-                        @enderror
-
-                        <label for="receiver_postalcode">Postcode</label>
-                        <input type="text" name="receiver_postalcode" value="{{old('receiver_postalcode')}}">
-                        @error('receiver_postalcode')
-                            <div class="alert alert-danger"> {{ $message }} </div>
-                        @enderror
-
-                        <label for="receiver_city">Stad</label>
-                        <input type="text" name="receiver_city" value="{{old('receiver_city')}}">
-                        @error('receiver_city')
-                            <div class="alert alert-danger"> {{ $message }} </div>
-                        @enderror
-                    </div>
+                        </div>
+                        <div class="flex justify-center">
+                            <input type="submit" value="Pakket aanmelden" class="btn btn-dark bg-dark mt-2">
+                        </div>
+                    </form>
                 </div>
-                <div class="flex justify-center">
-                    <input type="submit" value="Pakket aanmelden" class="btn btn-dark bg-dark mt-2">
-                </div>
-            </form>
-        </div>
-        @endif
+            @endif
         @endunlessrole
 </x-app-layout>

@@ -44,7 +44,6 @@ class AdminDashboardController extends Controller
         if($request->Status!="") {
             $packages->where('Status', $request->Status);
         }
-
         if($request->Sorting!="") {
             $packages->orderBy('name', 'desc');
         }
@@ -99,10 +98,13 @@ class AdminDashboardController extends Controller
             }
         }
         else if($user->can("lezen")) {
-            $packages = Package::where('transporters_id', null)
-            ->where('status', PackageStatus::AANGEMELD, PackageStatus::UITGEPRINT)
-            ->orWhere('transporters_id', Auth::user()->transporters_id)
+            $packagesUser = Package::where('transporters_id', null)
+            ->whereIn('status', [PackageStatus::AANGEMELD, PackageStatus::UITGEPRINT]);
+
+            $packagesTransporter = Package::where('transporters_id', Auth::user()->transporters_id)
             ->whereIn('status', [PackageStatus::VERZONDEN, PackageStatus::SORTEERCENTRUM, PackageStatus::UITGEPRINT]);
+
+            $packages = $packagesUser->union($packagesTransporter);
 
             $packagesAangemeld = Package::search($request->search)
             ->where('transporters_id', null)
@@ -123,7 +125,6 @@ class AdminDashboardController extends Controller
         if($request->Status!="") {
             $packages->where('Status', $request->Status);
         }
-
         if($request->Sorting!="") {
             $packages->orderBy('name', 'desc');
         }
@@ -136,55 +137,6 @@ class AdminDashboardController extends Controller
         return view('admindashboard.index', compact('clients', 'packages', 'webshops', 'status', 'sorting'));
     }
 
-    public function webshopstore(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        // User::create($request->all());
-        // return redirect('/admindashboard');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      *
@@ -194,6 +146,11 @@ class AdminDashboardController extends Controller
      */
     public function updateWebshopClient(Request $request)
     {
+        $request->validate([
+            'client' => 'required|not_in:0',
+            'webshop' => 'required|not_in:0',
+        ]);
+
         $user = User::find($request->client);
         $user->webshops_id = $request->webshop;
         $user->save();
@@ -221,16 +178,5 @@ class AdminDashboardController extends Controller
         }
 
         return redirect('/admindashboard');
- }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
