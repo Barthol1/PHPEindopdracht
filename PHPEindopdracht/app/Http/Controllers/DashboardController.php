@@ -34,7 +34,7 @@ class DashboardController extends Controller
             $packages->where('Status', $request->Status);
         }
         if($request->Sorting!="") {
-            $packages->orderBy('name', 'desc');
+            $packages->orderBy($request->Sorting, 'desc');
         }
 
         $status = PackageStatus::cases();

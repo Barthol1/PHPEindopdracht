@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "algolia/scout-extended": "2.0",
         "barryvdh/laravel-dompdf": "^1.0",
         "dgvai/laravel-user-review": "^1.0",
         "digikraaft/laravel-review-rating": "^2.3",
