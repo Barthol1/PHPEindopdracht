@@ -5,17 +5,15 @@ namespace Tests\Browser;
 use App\enum\PackageStatus;
 use App\Models\User;
 use App\Models\Package;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Laravel\Dusk\Browser;
 use Tests\Browser\Pages\Admin;
 use Tests\DuskTestCase;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Testing\WithFaker;
 
 class PackagePickUpTest extends DuskTestCase
 {
-    use WithFaker, HasFactory;
+    use WithFaker;
     /**
      * A Dusk test example.
      *
@@ -24,7 +22,7 @@ class PackagePickUpTest extends DuskTestCase
     public function testPickupPackage()
     {
         $package = Package::factory()->create(['status' => PackageStatus::UITGEPRINT]);
-        $date = Carbon::now();
+        $date = Carbon::now()->timezone('Europe/Amsterdam');
 
         $this->browse(function (Browser $browser) use ($package, $date) {
             $browser->loginAs(User::find(5))

@@ -3,7 +3,7 @@
 namespace Tests\Browser;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Models\Package;
 use Laravel\Dusk\Browser;
 use Tests\Browser\Pages\PackageOverview;
 use Tests\DuskTestCase;
@@ -18,45 +18,57 @@ class PackageSignUpTest extends DuskTestCase
      *
      * @return void
      */
-    public function testPackageSignUp()
+    public function testSignUpPackage()
     {
-        $this->browse(function (Browser $browser) {
+        $package = Package::factory()->make();
+
+        $this->browse(function (Browser $browser) use ($package) {
             $browser->loginAs(User::find(1))
                     ->visit(new PackageOverview)
                     ->assertSee('Dashboard')
                     ->scrollTo('@formSignUpPackage')
                     ->pause(2000)
-                    ->type('sender_name' , $this->faker->name())
-                    ->type('sender_adres' , $this->faker->streetAddress())
-                    ->type('sender_city' , $this->faker->city())
-                    ->type('sender_postalcode' , $this->faker->postcode())
-                    ->type('receiver_name' , $this->faker->name())
-                    ->type('receiver_adres' , $this->faker->streetAddress())
-                    ->type('receiver_postalcode' , $this->faker->postcode())
-                    ->type('receiver_city' , $this->faker->city())
+                    ->type('sender_name' , $package->sender_name)
+                    ->type('sender_adres' , $package->sender_adres)
+                    ->type('sender_city' , $package->sender_city)
+                    ->type('sender_postalcode' , $package->sender_postalcode)
+                    ->type('receiver_name' , $package->receiver_name)
+                    ->type('receiver_adres' , $package->receiver_adres)
+                    ->type('receiver_postalcode' , $package->receiver_postalcode)
+                    ->type('receiver_city' , $package->receiver_city)
                     ->pause(2000)
                     ->press('Pakket aanmelden')
                     ->pause(2000);
         });
+
+        Package::orderBy('id', 'desc')->first()->delete();
     }
 
-    public function testPackageEdit()
+    public function testEditPackage()
     {
-        $this->browse(function (Browser $browser) {
+        $package = Package::factory()->create();
+
+        $this->browse(function (Browser $browser) use ($package) {
             $browser->loginAs(User::find(1))
                     ->visit(new PackageOverview)
-                    ->assertSee('Dashboard')
-                    ->assertPresent('@paginator')
-                    ->scrollTo('@paginateToPackage')
-                    ->pause(2000)
-                    ->clickAndWaitForReload('@paginateToPackage')
-                    ->scrollTo('@editPackage')
-                    ->pause(2000)
-                    ->clickAndWaitForReload('@editPackage')
-                    ->type('sender_name' , $this->faker->name())
+                    ->assertSee('Dashboard');
+                    if($browser->element('@paginator')) {
+                        $browser->scrollTo('@paginateToPackage')
+                        ->pause(2000)
+                        ->clickAndWaitForReload('@paginateToPackage')
+                        ->scrollTo('@editPackagePagination')
+                        ->pause(2000)
+                        ->clickAndWaitForReload('@editPackagePagination');
+                    }
+                    else {
+                        $browser->scrollTo('@editPackage')
+                        ->pause(2000)
+                        ->clickAndWaitForReload('@editPackage');
+                    }
+                    $browser->type('sender_name' , $this->faker->name())
                     ->type('sender_adres' , $this->faker->streetAddress())
-                    ->type('sender_city' , $this->faker->city())
                     ->type('sender_postalcode' , $this->faker->postcode())
+                    ->type('sender_city' , $this->faker->city())
                     ->type('receiver_name' , $this->faker->name())
                     ->type('receiver_adres' , $this->faker->streetAddress())
                     ->type('receiver_postalcode' , $this->faker->postcode())
@@ -65,57 +77,79 @@ class PackageSignUpTest extends DuskTestCase
                     ->press('Wijzigen')
                     ->pause(2000);
         });
+
+        Package::destroy($package->id);
     }
 
-    public function testPackageDestroy()
+    public function testDestroyPackage()
     {
+        Package::factory()->create();
+
         $this->browse(function (Browser $browser) {
             $browser->loginAs(User::find(1))
                     ->visit(new PackageOverview)
-                    ->assertSee('Dashboard')
-                    ->assertPresent('@paginator')
-                    ->scrollTo('@paginateToPackage')
-                    ->pause(2000)
-                    ->clickAndWaitForReload('@paginateToPackage')
-                    ->scrollTo('@removePackage')
-                    ->pause(2000)
-                    ->press('@removePackage')
-                    ->pause(2000);
+                    ->assertSee('Dashboard');
+                    if($browser->element('@paginator')) {
+                        $browser->scrollTo('@paginateToPackage')
+                        ->pause(2000)
+                        ->clickAndWaitForReload('@paginateToPackage')
+                        ->scrollTo('@removePackagePagination')
+                        ->pause(2000)
+                        ->pressAndWaitFor('@removePackagePagination');
+                    }
+                    else {
+                        $browser->scrollTo('@removePackage')
+                        ->pause(2000)
+                        ->pressAndWaitFor('@removePackage');
+                    }
+                    $browser->pause(2000);
         });
     }
 
-    public function testPackageSignUpClient()
+    public function testClientSignUpPackage()
     {
-        $this->browse(function (Browser $browser) {
+        $package = Package::factory()->create(['users_id' => 4]);
+
+        $this->browse(function (Browser $browser) use ($package) {
             $browser->loginAs(User::find(4))
                     ->visit(new PackageOverview)
                     ->assertSee('Dashboard')
                     ->scrollTo('@formSignUpPackage')
                     ->pause(2000)
-                    ->type('receiver_name' , $this->faker->name())
-                    ->type('receiver_adres' , $this->faker->streetAddress())
-                    ->type('receiver_postalcode' , $this->faker->postcode())
-                    ->type('receiver_city' , $this->faker->city())
+                    ->type('receiver_name' , $package->receiver_name)
+                    ->type('receiver_adres' , $package->receiver_adres)
+                    ->type('receiver_postalcode' , $package->receiver_postalcode)
+                    ->type('receiver_city' , $package->receiver_city)
                     ->pause(2000)
                     ->press('Pakket aanmelden')
                     ->pause(2000);
         });
+
+        Package::destroy($package->id);
     }
 
-    public function testPackageEditClient()
+    public function testClientEditPackage()
     {
-        $this->browse(function (Browser $browser) {
+        $package = Package::factory()->create(['users_id' => 4]);
+
+        $this->browse(function (Browser $browser) use ($package) {
             $browser->loginAs(User::find(4))
                     ->visit(new PackageOverview)
-                    ->assertSee('Dashboard')
-                    ->assertPresent('@paginator')
-                    ->scrollTo('@paginateToPackage')
-                    ->pause(2000)
-                    ->clickAndWaitForReload('@paginateToPackage')
-                    ->scrollTo('@editPackage')
-                    ->pause(2000)
-                    ->clickAndWaitForReload('@editPackage')
-                    ->type('receiver_name' , $this->faker->name())
+                    ->assertSee('Dashboard');
+                    if($browser->element('@paginator')) {
+                        $browser->scrollTo('@paginateToPackage')
+                        ->pause(2000)
+                        ->clickAndWaitForReload('@paginateToPackage')
+                        ->scrollTo('@editPackagePagination')
+                        ->pause(2000)
+                        ->clickAndWaitForReload('@editPackagePagination');
+                    }
+                    else {
+                        $browser->scrollTo('@editPackage')
+                        ->pause(2000)
+                        ->clickAndWaitForReload('@editPackage');
+                    }
+                    $browser->type('receiver_name' , $this->faker->name())
                     ->type('receiver_adres' , $this->faker->streetAddress())
                     ->type('receiver_postalcode' , $this->faker->postcode())
                     ->type('receiver_city' , $this->faker->city())
@@ -123,22 +157,32 @@ class PackageSignUpTest extends DuskTestCase
                     ->press('Wijzigen')
                     ->pause(2000);
         });
+
+        Package::destroy($package->id);
     }
 
-    public function testPackageDestroyClient()
+    public function testClientDestroyPackage()
     {
+        Package::factory()->create(['users_id' => 4]);
+
         $this->browse(function (Browser $browser) {
             $browser->loginAs(User::find(4))
                     ->visit(new PackageOverview)
-                    ->assertSee('Dashboard')
-                    ->assertPresent('@paginator')
-                    ->scrollTo('@paginateToPackage')
-                    ->pause(2000)
-                    ->clickAndWaitForReload('@paginateToPackage')
-                    ->scrollTo('@removePackage')
-                    ->pause(2000)
-                    ->press('@removePackage')
-                    ->pause(2000);
+                    ->assertSee('Dashboard');
+                    if($browser->element('@paginator')) {
+                        $browser->scrollTo('@paginateToPackage')
+                        ->pause(2000)
+                        ->clickAndWaitForReload('@paginateToPackage')
+                        ->scrollTo('@removePackagePagination')
+                        ->pause(2000)
+                        ->pressAndWaitFor('@removePackagePagination');
+                    }
+                    else {
+                        $browser->scrollTo('@removePackage')
+                        ->pause(2000)
+                        ->pressAndWaitFor('@removePackage');
+                    }
+                    $browser->pause(2000);
         });
     }
 }

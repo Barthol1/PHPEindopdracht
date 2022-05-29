@@ -37,13 +37,13 @@ class PackageSignUpController extends Controller
             'sender_city' => 'required|max:189',
             'sender_postalcode' => array(
                 'required',
-                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[A-z]{2})?$)/u'
+                'regex:/^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i'
             ),
             'receiver_name' => 'required|max:255',
             'receiver_adres' => 'required|max:255',
             'receiver_postalcode' => array(
                 'required',
-                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[A-z]{2})?$)/u'
+                'regex:/^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i'
             ),
             'receiver_city' => 'required|max:189',
         ]);
@@ -84,13 +84,13 @@ class PackageSignUpController extends Controller
             'sender_city' => 'required|max:189',
             'sender_postalcode' => array(
                 'required',
-                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[A-z]{2})?$)/u'
+                'regex:/^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i'
             ),
             'receiver_name' => 'required|max:255',
             'receiver_adres' => 'required|max:255',
             'receiver_postalcode' => array(
                 'required',
-                'regex:/(^[1-9][0-9]{3}\s?(?!sa|sd|ss)(?:[A-z]{2})?$)/u'
+                'regex:/^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i'
             ),
             'receiver_city' => 'required|max:189',
         ]);
@@ -108,7 +108,7 @@ class PackageSignUpController extends Controller
     public function destroy($id)
     {
         $package = Package::find($id);
-        $package::destroy($id);
+        Package::destroy($id);
 
         if($package) {
             return response()->json(["result" => "deleted package " . $package->name]);
