@@ -57,7 +57,7 @@ class AdminDashboardController extends Controller
     }
 
     public function getPDF($id) {
-        $package = package::all()->where('id', '=', $id);
+        $package = Package::all()->where('id', '=', $id);
         foreach($package as $p) {
             $p->status = "Uitgeprint";
             $p->save();
@@ -70,7 +70,7 @@ class AdminDashboardController extends Controller
     }
 
     public function getAllPDF() {
-        $package = package::all();
+        $package = Package::all();
         foreach($package as $p) {
             $p->status = "Uitgeprint";
             $p->save();

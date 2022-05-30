@@ -32,13 +32,16 @@ class TracingTest extends DuskTestCase
         });
     }
     public function testPackageSearch() {
-        $package = package::factory()->create();
+        $package = Package::factory()->create();
         $packagename = $package->name;
+
         $this->browse(function (Browser $browser) use ($packagename) {
             $browser->visit(new Tracing)
                     ->type('#packagelabelinput', $packagename)
                     ->clickAndWaitForReload('#searchpackagebutton')
                     ->assertSee($packagename);
         });
+
+        Package::destroy($package->id);
     }
 }
