@@ -26,7 +26,7 @@ class ClientWebshopTest extends DuskTestCase
                     ->scrollTo('@updateClientForm')
                     ->pause(2000)
                     ->select('client', $user->id)
-                    ->select('webshop', 1)
+                    ->select('webshop')
                     ->press('@updateClient')
                     ->pause(2000)
                     ->scrollTo('@clientTable')
