@@ -33,7 +33,7 @@ class PackagePickUpTest extends DuskTestCase
                     ->press('@search')
                     ->assertSee($package)
                     ->pause(2000)
-                    ->keys('@pickUpDate', $date->addDays(2)->day, $date->month, $date->year)
+                    ->keys('@pickUpDate', $date->addDays(2)->format('d-m-Y'))
                     ->keys('@pickUpTime', $date)
                     ->check('selectedPackage[]')
                     ->pause(2000)
