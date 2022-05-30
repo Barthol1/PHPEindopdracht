@@ -36,7 +36,7 @@ class PackageCron extends Command
 
     public function handle()
     {
-        $packages = Package::where('pick_up_time', '<=', Carbon::now()->addDays(2));
+        $packages = Package::where('pick_up_time', '<=', Carbon::now()->timezone('Europe/Amsterdam')->addDays(2));
 
         $packages->each(function($p) {
             $p->status = PackageStatus::VERZONDEN;

@@ -31,10 +31,10 @@ class pickupDateTime implements Rule
         $this->value = $value;
 
         $check = (
-            $value >= Carbon::now()->addDays(1)->toDateString()
+            $value >= Carbon::now()->timezone('Europe/Amsterdam')->addDays(1)->toDateString()
             && Carbon::now()->timezone('Europe/Amsterdam')->toTimeString() <= Carbon::parse("15:00:00")->format("H:i:s")
         )
-        || $value >= Carbon::now()->addDays(2)->toDateString();
+        || $value >= Carbon::now()->timezone('Europe/Amsterdam')->addDays(2)->toDateString();
 
         return $check;
     }
@@ -47,12 +47,13 @@ class pickupDateTime implements Rule
     public function message()
     {
         $message = null;
+        $defaultTime = Carbon::parse("15:00:00")->format("H:i:s");
 
-        if(Carbon::now()->timezone('Europe/Amsterdam')->toTimeString() > Carbon::parse("15:00:00")->format("H:i:s")) {
-            $message = "plan voor de 2e dag vanaf vandaag in";
+        if(Carbon::now()->timezone('Europe/Amsterdam')->toTimeString() > $defaultTime && $this->value < Carbon::now()->timezone('Europe/Amsterdam')->addDays(2)->toDateString()) {
+            $message = "plan voor de 2e dag of later vanaf vandaag in";
         }
-        else if($this->value < Carbon::now()->addDays(1)->toDateString()) {
-            $message = "plan voor de volgende dag of de dag erop in";
+        else if($this->value < Carbon::now()->timezone('Europe/Amsterdam')->addDays(1)->toDateString() && $defaultTime > Carbon::now()->timezone('Europe/Amsterdam')->toTimeString()) {
+            $message = "plan voor de volgende dag of later in";
         }
 
         return $message;
