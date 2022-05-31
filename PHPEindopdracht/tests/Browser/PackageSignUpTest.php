@@ -95,12 +95,12 @@ class PackageSignUpTest extends DuskTestCase
                         ->clickAndWaitForReload('@paginateToPackage')
                         ->scrollTo('@removePackagePagination')
                         ->pause(2000)
-                        ->pressAndWaitFor('@removePackagePagination');
+                        ->press('@removePackagePagination');
                     }
                     else {
                         $browser->scrollTo('@removePackage')
                         ->pause(2000)
-                        ->pressAndWaitFor('@removePackage');
+                        ->press('@removePackage');
                     }
                     $browser->pause(2000);
         });
@@ -175,12 +175,12 @@ class PackageSignUpTest extends DuskTestCase
                         ->clickAndWaitForReload('@paginateToPackage')
                         ->scrollTo('@removePackagePagination')
                         ->pause(2000)
-                        ->pressAndWaitFor('@removePackagePagination');
+                        ->press('@removePackagePagination');
                     }
                     else {
                         $browser->scrollTo('@removePackage')
                         ->pause(2000)
-                        ->pressAndWaitFor('@removePackage');
+                        ->press('@removePackage');
                     }
                     $browser->pause(2000);
         });

@@ -24,45 +24,59 @@ class PackageOverviewTest extends DuskTestCase
                     ->assertSee('Dashboard');
         });
     }
-    
+
     public function testFileUpload()
     {
         $this->browse(function (Browser $browser) {
             $browser->loginAs(User::find(1))
                     ->visit(new PackageOverview)
-                    ->attach('#csvupload', storage_path('app/public/CSVImport2.csv'))
-                    ->clickAndWaitForReload('#csvsubmit')
+                    ->attach('#csvfile', storage_path('app/public/CSVImport.csv'))
+                    ->clickAndWaitForReload('#filesubmit')
                     ->assertSee('Data Geimporteerd');
         });
     }
 
     public function testFilter() {
-        package::factory()->create(['status' => PackageStatus::AFGELEVERD]);
+        $package = Package::factory()->create(['status' => PackageStatus::AFGELEVERD]);
+
         $this->browse(function (Browser $browser) {
             $browser->loginAs(User::find(1))
                     ->visit(new PackageOverview)
                     ->select('Status', 'Aangemeld')
-                    ->clickAndWaitForReload('#sortingbutton')
-                    ->assertDontSeeIn('@card', 'Afgeleverd');
+                    ->press('@sortingbutton')
+                    ->assertSeeIn('@card', 'Aangemeld');
         });
+
+        Package::destroy($package->id);
     }
 
     public function testSorting() {
-        $package = package::orderBy('name', 'desc')->first();
+        $package = Package::orderBy('name', 'desc')->first();
         $this->browse(function (Browser $browser) use ($package) {
             $browser->loginAs(User::find(1))
                     ->visit(new PackageOverview)
                     ->select('Sorting', 'name')
-                    ->clickAndWaitForReload('#sortingbutton')
+                    ->clickAndWaitForReload('@sortingbutton')
                     ->assertSeeIn('@card', $package->name);
         });
     }
+
     public function testPagination() {
-        package::factory(9)->create();
+        $ids = array();
+
+        for($i = 0; $i < 9; $i++) {
+            $package = Package::factory($i)->create();
+            $ids[] = $package;
+        }
+
         $this->browse(function (Browser $browser) {
             $browser->loginAs(User::find(1))
                     ->visit(new PackageOverview)
                     ->assertPresent('@paginator');
         });
+
+        for($i = 0; $i < count($ids); $i++) {
+            Package::destroy($ids[$i]);
+        }
     }
 }

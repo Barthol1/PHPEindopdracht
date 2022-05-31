@@ -51,7 +51,7 @@ class TracingController extends Controller
     }
 
     public function getPackage(Request $request) {
-        $package = package::all()->where('name', $request->code)->first();
+        $package = Package::all()->where('name', $request->code)->first();
         if(!$package) {
             return back()->withErrors(['package' => 'Ongeldige pakketcode']);
         }

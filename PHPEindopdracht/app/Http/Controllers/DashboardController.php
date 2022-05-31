@@ -50,7 +50,7 @@ class DashboardController extends Controller
             'review' => 'required'
         ]);
         $user = auth()->user();
-        $package = package::find($id);
+        $package = Package::find($id);
         $package->makeReview($user,$request->review, "Review");
         return redirect('/dashboard');
     }
