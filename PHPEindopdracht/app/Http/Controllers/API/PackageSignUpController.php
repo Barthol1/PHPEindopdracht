@@ -37,13 +37,13 @@ class PackageSignUpController extends Controller
             'sender_city' => 'required|max:189',
             'sender_postalcode' => array(
                 'required',
-                'regex:/^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i'
+                'regex:/^[1-9][0-9]{3} ?(?!sa|sd|ss)[A-Z]{2}$/i'
             ),
             'receiver_name' => 'required|max:255',
             'receiver_adres' => 'required|max:255',
             'receiver_postalcode' => array(
                 'required',
-                'regex:/^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i'
+                'regex:/^[1-9][0-9]{3} ?(?!sa|sd|ss)[A-Z]{2}$/i'
             ),
             'receiver_city' => 'required|max:189',
         ]);
@@ -61,7 +61,7 @@ class PackageSignUpController extends Controller
         $package->sender_name = $request['sender_name'];
         $package->sender_adres = $request['sender_adres'];
         $package->sender_city = $request['sender_city'];
-        $package->sender_postalcode = strtoupper($request['sender_postalcode']);
+        $package->sender_postalcode = trim(strtoupper(substr_replace($request['receiver_postalcode'], ' ', 4, 0)));
 
         $package->status = PackageStatus::AANGEMELD;
         $package->users_id = request()->user()->id;
@@ -69,7 +69,7 @@ class PackageSignUpController extends Controller
         $package->receiver_name = $request['receiver_name'];
         $package->receiver_adres = $request['receiver_adres'];
         $package->receiver_city = $request['receiver_city'];
-        $package->receiver_postalcode = strtoupper($request['receiver_postalcode']);
+        $package->receiver_postalcode = trim(strtoupper(substr_replace($request['receiver_postalcode'], ' ', 4, 0)));
 
         $package->save();
 
@@ -84,13 +84,13 @@ class PackageSignUpController extends Controller
             'sender_city' => 'required|max:189',
             'sender_postalcode' => array(
                 'required',
-                'regex:/^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i'
+                'regex:/^[1-9][0-9]{3} ?(?!sa|sd|ss)[A-Z]{2}$/i'
             ),
             'receiver_name' => 'required|max:255',
             'receiver_adres' => 'required|max:255',
             'receiver_postalcode' => array(
                 'required',
-                'regex:/^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i'
+                'regex:/^[1-9][0-9]{3} ?(?!sa|sd|ss)[A-Z]{2}$/i'
             ),
             'receiver_city' => 'required|max:189',
         ]);
