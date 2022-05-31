@@ -30,8 +30,8 @@ class PackageOverviewTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->loginAs(User::find(1))
                     ->visit(new PackageOverview)
-                    ->attach('#csvupload', storage_path('app/public/CSVImport.csv'))
-                    ->clickAndWaitForReload('#csvsubmit')
+                    ->attach('#csvfile', storage_path('app/public/CSVImport.csv'))
+                    ->clickAndWaitForReload('#filesubmit')
                     ->assertSee('Data Geimporteerd');
         });
     }
