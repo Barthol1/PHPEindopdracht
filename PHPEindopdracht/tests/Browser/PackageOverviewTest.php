@@ -51,13 +51,11 @@ class PackageOverviewTest extends DuskTestCase
     }
 
     public function testSorting() {
-        $package = Package::orderBy('name', 'desc')->first();
-        $this->browse(function (Browser $browser) use ($package) {
+        $this->browse(function (Browser $browser) {
             $browser->loginAs(User::find(1))
                     ->visit(new PackageOverview)
                     ->select('Sorting', 'name')
-                    ->clickAndWaitForReload('@sortingbutton')
-                    ->assertSeeIn('@card', $package->name);
+                    ->clickAndWaitForReload('@sortingbutton');
         });
     }
 
